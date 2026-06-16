@@ -1,8 +1,11 @@
 package main
 
 import (
+	"backend/controllers/users"
 	"backend/initializers"
 	"backend/internal"
+	"backend/middleware"
+	"backend/services"
 	"log"
 	"net/http"
 	"os"
@@ -13,7 +16,8 @@ import (
 )
 
 var (
-	app *internal.App
+	app         *internal.App
+	userService *services.UserService
 )
 
 func init() {
@@ -35,18 +39,27 @@ func init() {
 
 	app.Router.Use(cors.New(config))
 
+	userService = services.NewUserService(app.DB)
+
 }
 
 func main() {
+	defer app.DB.Close()
 	port := os.Getenv("PORT")
+	secret := []byte(os.Getenv("JWT_SECRET"))
 
 	app.Router.SetTrustedProxies([]string{"localhost", "127.0.0.1"})
-	api := app.Router.Group("/")
+	authenticatedApi := app.Router.Group("/")
+	authenticatedApi.Use(middleware.RequireAuth(userService, secret))
 	{
-		api.GET("/health", func(ctx *gin.Context) {
-			ctx.JSON(http.StatusOK, gin.H{"status": "healthy"})
-		})
+		users.RegisterRoutes(authenticatedApi)
 	}
+
+	unauthenticatedApi := app.Router.Group("/public")
+	unauthenticatedApi.GET("/health", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{"status": "healthy"})
+	})
+	users.RegisterUnauthenticatedRoutes(unauthenticatedApi)
 
 	if err := app.Router.Run(":" + port); err != nil {
 		log.Fatal(err)
