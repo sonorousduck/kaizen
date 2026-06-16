@@ -1,10 +1,10 @@
 package services
 
 import (
+	"backend/models"
 	"context"
 	"errors"
 	"fmt"
-	"kaizen/models"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -33,34 +33,6 @@ func (s *UserService) CreateUser(ctx context.Context, input models.CreateUser) (
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to create user: %w", err)
-	}
-
-	return user, nil
-}
-
-func (s *UserService) CreateUserWithDefaultTeam(ctx context.Context, input models.CreateUser) (*models.User, error) {
-	tx, err := s.db.BeginTx(ctx, pgx.TxOptions{})
-	if err != nil {
-		return nil, fmt.Errorf("failed to begin transaction: %w", err)
-	}
-	defer tx.Rollback(ctx)
-
-	user := &models.User{}
-	err = tx.QueryRow(ctx,
-		`INSERT INTO users (first_name, last_name, email, password)
-		VALUES ($1, $2, $3, $4)
-		RETURNING id, first_name, last_name, email, deleted_at, created_at, updated_at`,
-		input.FirstName,
-		input.LastName,
-		input.Email,
-		input.Password,
-	).Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.DeletedAt, &user.CreatedAt, &user.UpdatedAt)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create user: %w", err)
-	}
-
-	if err := tx.Commit(ctx); err != nil {
-		return nil, fmt.Errorf("failed to commit transaction: %w", err)
 	}
 
 	return user, nil

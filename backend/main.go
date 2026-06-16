@@ -1,7 +1,14 @@
+// @title Kaizen API
+// @version 1.0
+// @description Goal planning + execution
+// @host localhost:8080
+// @BasePath /
+// @schemes http https
 package main
 
 import (
 	"backend/controllers/users"
+	"backend/docs"
 	"backend/initializers"
 	"backend/internal"
 	"backend/middleware"
@@ -48,18 +55,21 @@ func main() {
 	port := os.Getenv("PORT")
 	secret := []byte(os.Getenv("JWT_SECRET"))
 
+	docs.SwaggerInfo.BasePath = "/"
+	app.Router.StaticFile("/docs/swagger", "./docs/swagger.json")
+
 	app.Router.SetTrustedProxies([]string{"localhost", "127.0.0.1"})
 	authenticatedApi := app.Router.Group("/")
 	authenticatedApi.Use(middleware.RequireAuth(userService, secret))
 	{
-		users.RegisterRoutes(authenticatedApi)
+		users.RegisterRoutes(authenticatedApi, userService)
 	}
 
 	unauthenticatedApi := app.Router.Group("/public")
 	unauthenticatedApi.GET("/health", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"status": "healthy"})
 	})
-	users.RegisterUnauthenticatedRoutes(unauthenticatedApi)
+	users.RegisterUnauthenticatedRoutes(unauthenticatedApi, userService, secret)
 
 	if err := app.Router.Run(":" + port); err != nil {
 		log.Fatal(err)
