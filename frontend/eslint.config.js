@@ -1,9 +1,8 @@
-import antfu from '@antfu/eslint-config'
+import antfu from '@antfu/eslint-config';
 import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths';
 
-
 export default antfu({
-formatters: {
+  formatters: {
     css: true,
     html: true,
     markdown: 'prettier',
@@ -54,4 +53,4 @@ formatters: {
       { allowSameFolder: true, rootDir: 'src', prefix: '@' },
     ],
   },
-})
+});

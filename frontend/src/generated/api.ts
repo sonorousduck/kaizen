@@ -6,235 +6,195 @@
  * OpenAPI spec version: 1.0
  */
 export interface ModelsCreateUser {
-  email: string;
-  firstName: string;
-  lastName: string;
+  email: string
+  firstName: string
+  lastName: string
   /** @minLength 7 */
-  password: string;
+  password: string
 }
 
 export interface ModelsLoginUser {
-  email: string;
+  email: string
   /** @minLength 7 */
-  password: string;
+  password: string
 }
 
 export interface ModelsUserResponse {
-  createdAt?: string;
-  deletedAt?: string;
-  email?: string;
-  firstName?: string;
-  id?: string;
-  lastName?: string;
-  updatedAt?: string;
+  createdAt?: string
+  deletedAt?: string
+  email?: string
+  firstName?: string
+  id?: string
+  lastName?: string
+  updatedAt?: string
 }
 
-export type createUserResponse201 = {
+export interface createUserResponse201 {
   data: ModelsUserResponse
   status: 201
 }
 
-export type createUserResponse400 = {
+export interface createUserResponse400 {
   data: string
   status: 400
 }
 
-export type createUserResponse500 = {
+export interface createUserResponse500 {
   data: string
   status: 500
 }
 
 export type createUserResponseSuccess = (createUserResponse201) & {
-  headers: Headers;
+  headers: Headers
 };
 export type createUserResponseError = (createUserResponse400 | createUserResponse500) & {
-  headers: Headers;
+  headers: Headers
 };
 
-export type createUserResponse = (createUserResponseSuccess | createUserResponseError)
+export type createUserResponse = (createUserResponseSuccess | createUserResponseError);
 
-export const getCreateUserUrl = () => {
-
-
-
-
-  return `${import.meta.env.VITE_API_BASE_URL}/users`
+export function getCreateUserUrl() {
+  return `${import.meta.env.VITE_API_BASE_URL}/users`;
 }
 
 /**
  * Register a new user with email and password
  * @summary Create a new user
  */
-export const createUser = async (modelsCreateUser: ModelsCreateUser, options?: RequestInit): Promise<createUserResponse> => {
-
-  const res = await fetch(getCreateUserUrl(),
-  {
+export async function createUser(modelsCreateUser: ModelsCreateUser, options?: RequestInit): Promise<createUserResponse> {
+  const res = await fetch(getCreateUserUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(modelsCreateUser)
-  }
-)
-
+    body: JSON.stringify(modelsCreateUser),
+  });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: createUserResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as createUserResponse
+  const data: createUserResponse['data'] = body ? JSON.parse(body) : {};
+  return { data, status: res.status, headers: res.headers } as createUserResponse;
 }
 
-
-
-export type loginUserResponse200 = {
+export interface loginUserResponse200 {
   data: ModelsUserResponse
   status: 200
 }
 
-export type loginUserResponse400 = {
+export interface loginUserResponse400 {
   data: string
   status: 400
 }
 
-export type loginUserResponse403 = {
+export interface loginUserResponse403 {
   data: string
   status: 403
 }
 
-export type loginUserResponse500 = {
+export interface loginUserResponse500 {
   data: string
   status: 500
 }
 
 export type loginUserResponseSuccess = (loginUserResponse200) & {
-  headers: Headers;
+  headers: Headers
 };
 export type loginUserResponseError = (loginUserResponse400 | loginUserResponse403 | loginUserResponse500) & {
-  headers: Headers;
+  headers: Headers
 };
 
-export type loginUserResponse = (loginUserResponseSuccess | loginUserResponseError)
+export type loginUserResponse = (loginUserResponseSuccess | loginUserResponseError);
 
-export const getLoginUserUrl = () => {
-
-
-
-
-  return `${import.meta.env.VITE_API_BASE_URL}/users/login`
+export function getLoginUserUrl() {
+  return `${import.meta.env.VITE_API_BASE_URL}/users/login`;
 }
 
 /**
  * Login with email and password, returns JWT token in cookie
  * @summary Login user
  */
-export const loginUser = async (modelsLoginUser: ModelsLoginUser, options?: RequestInit): Promise<loginUserResponse> => {
-
-  const res = await fetch(getLoginUserUrl(),
-  {
+export async function loginUser(modelsLoginUser: ModelsLoginUser, options?: RequestInit): Promise<loginUserResponse> {
+  const res = await fetch(getLoginUserUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(modelsLoginUser)
-  }
-)
-
+    body: JSON.stringify(modelsLoginUser),
+  });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: loginUserResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as loginUserResponse
+  const data: loginUserResponse['data'] = body ? JSON.parse(body) : {};
+  return { data, status: res.status, headers: res.headers } as loginUserResponse;
 }
 
-
-
-export type logoutUserResponse200 = {
+export interface logoutUserResponse200 {
   data: string
   status: 200
 }
 
 export type logoutUserResponseSuccess = (logoutUserResponse200) & {
-  headers: Headers;
+  headers: Headers
 };
 ;
 
-export type logoutUserResponse = (logoutUserResponseSuccess)
+export type logoutUserResponse = (logoutUserResponseSuccess);
 
-export const getLogoutUserUrl = () => {
-
-
-
-
-  return `${import.meta.env.VITE_API_BASE_URL}/users/logout`
+export function getLogoutUserUrl() {
+  return `${import.meta.env.VITE_API_BASE_URL}/users/logout`;
 }
 
 /**
  * Clear the authentication cookie to logout
  * @summary Logout user
  */
-export const logoutUser = async ( options?: RequestInit): Promise<logoutUserResponse> => {
-
-  const res = await fetch(getLogoutUserUrl(),
-  {
+export async function logoutUser(options?: RequestInit): Promise<logoutUserResponse> {
+  const res = await fetch(getLogoutUserUrl(), {
     ...options,
-    method: 'POST'
+    method: 'POST',
 
-
-  }
-)
-
+  });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: logoutUserResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as logoutUserResponse
+  const data: logoutUserResponse['data'] = body ? JSON.parse(body) : {};
+  return { data, status: res.status, headers: res.headers } as logoutUserResponse;
 }
 
-
-
-export type getCurrentUserResponse200 = {
+export interface getCurrentUserResponse200 {
   data: ModelsUserResponse
   status: 200
 }
 
-export type getCurrentUserResponse401 = {
+export interface getCurrentUserResponse401 {
   data: string
   status: 401
 }
 
 export type getCurrentUserResponseSuccess = (getCurrentUserResponse200) & {
-  headers: Headers;
+  headers: Headers
 };
 export type getCurrentUserResponseError = (getCurrentUserResponse401) & {
-  headers: Headers;
+  headers: Headers
 };
 
-export type getCurrentUserResponse = (getCurrentUserResponseSuccess | getCurrentUserResponseError)
+export type getCurrentUserResponse = (getCurrentUserResponseSuccess | getCurrentUserResponseError);
 
-export const getGetCurrentUserUrl = () => {
-
-
-
-
-  return `${import.meta.env.VITE_API_BASE_URL}/users/me`
+export function getGetCurrentUserUrl() {
+  return `${import.meta.env.VITE_API_BASE_URL}/users/me`;
 }
 
 /**
  * Get the current authenticated user's information
  * @summary Get current user
  */
-export const getCurrentUser = async ( options?: RequestInit): Promise<getCurrentUserResponse> => {
-
-  const res = await fetch(getGetCurrentUserUrl(),
-  {
+export async function getCurrentUser(options?: RequestInit): Promise<getCurrentUserResponse> {
+  const res = await fetch(getGetCurrentUserUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
 
-
-  }
-)
-
+  });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: getCurrentUserResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getCurrentUserResponse
+  const data: getCurrentUserResponse['data'] = body ? JSON.parse(body) : {};
+  return { data, status: res.status, headers: res.headers } as getCurrentUserResponse;
 }
