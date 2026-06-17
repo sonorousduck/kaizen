@@ -4,7 +4,6 @@ type LogLevel = 'debug' | 'info' | 'warning' | 'error' | 'fatal';
 
 interface LogOptions {
   context: Record<string, unknown>
-
   fingerprint?: string[]
 }
 
