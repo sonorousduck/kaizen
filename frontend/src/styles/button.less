@@ -1,0 +1,108 @@
+@import './theme.less';
+
+// Base button styles
+.duck-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: @font-size-md;
+  border: none;
+  border-radius: @border-radius-md;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Primary variant (with background)
+.duck-button-primary {
+  background-color: @color-primary;
+  color: @color-primary-text;
+
+  &:hover:not(:disabled) {
+    background-color: @color-primary-hover;
+    box-shadow: @shadow-md;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+  &.duck-button-destructive-color {
+    background-color: @color-error;
+
+    &:hover:not(:disabled) {
+      background-color: @color-error-hover;
+    }
+  }
+}
+
+// Secondary variant (with border)
+.duck-button-secondary {
+  background-color: transparent;
+  color: @color-primary;
+  border: 2px solid @color-primary;
+
+  &:hover:not(:disabled) {
+    background-color: @color-background-mute;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &.duck-button-destructive-color {
+    color: @color-error;
+    border-color: @color-error;
+
+    &:hover:not(:disabled) {
+      border-color: @color-error-hover;
+    }
+  }
+}
+
+// Ghost variant (no background, no border)
+.duck-button-ghost {
+  background-color: transparent;
+  color: @color-text-primary;
+
+  &:hover:not(:disabled) {
+    background-color: @color-background-ghost-hover;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &.duck-button-destructive-color {
+    color: @color-error;
+    border-color: @color-error;
+
+    &:hover:not(:disabled) {
+      background-color: @color-background-mute;
+      border-color: @color-error-hover;
+    }
+  }
+}
+
+// Icon only (smaller padding)
+.duck-button-icon-only {
+  padding: 8px;
+  min-width: 40px;
+  justify-content: center;
+}
+
+// Text only (removes gap for better spacing)
+.duck-button-text-only {
+  gap: 0;
+}
+
+// Left-aligned text (with space between for menu/icon on right)
+.duck-button-left-text-aligned {
+  justify-content: space-between;
+}

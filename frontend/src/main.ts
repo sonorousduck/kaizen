@@ -3,8 +3,8 @@ import ElementPlus from 'element-plus';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import { createApp } from 'vue';
+import router from '@/router';
 import App from './App.vue';
-import router from './index.ts';
 import '@/styles/theme.less';
 
 const app = createApp(App);

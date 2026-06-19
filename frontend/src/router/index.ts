@@ -1,9 +1,9 @@
 import { ref } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import Createaccount from './pages/createaccount.vue';
-import Home from './pages/home.vue';
-import Login from './pages/login.vue';
-import { useAuthStore } from './stores/auth.ts';
+import Createaccount from '@/pages/createaccount.vue';
+import Home from '@/pages/home.vue';
+import Login from '@/pages/login.vue';
+import { useAuthStore } from '@/stores/auth.ts';
 
 export const isRouterReady = ref<boolean>(false);
 
