@@ -78,6 +78,70 @@
   }
 }
 
+// ---------------------------------------------------------------------------
+// Element Plus theme bridge — maps our design tokens onto Element's CSS vars.
+// Lives outside the media query above on purpose: every value below is a
+// var(...) reference, so it automatically follows whichever mode our own
+// tokens are currently resolved to (light or dark) without needing its own
+// @media block or the html.dark class Element's docs describe.
+// ---------------------------------------------------------------------------
+:root {
+  // Brand colors
+  --el-color-primary: var(--color-primary);
+  --el-color-success: var(--color-success);
+  --el-color-warning: var(--color-warning);
+  --el-color-danger: var(--color-error);
+  --el-color-error: var(--color-error);
+
+  // Backgrounds
+  --el-bg-color: var(--color-background);
+  --el-bg-color-page: var(--color-background-soft);
+  --el-bg-color-overlay: var(--color-background-softer);
+  --el-fill-color: var(--color-background-mute);
+  --el-fill-color-light: var(--color-background-soft);
+
+  // Text
+  --el-text-color-primary: var(--color-text-primary);
+  --el-text-color-regular: var(--color-text-secondary);
+  --el-text-color-secondary: var(--color-text-secondary);
+  --el-text-color-placeholder: var(--color-text-muted);
+  --el-text-color-disabled: var(--color-text-muted);
+
+  // Borders
+  --el-border-color: var(--color-border);
+  --el-border-color-light: var(--color-border-soft);
+  --el-border-color-lighter: var(--color-border-hover);
+  --el-border-color-hover: var(--color-border-hover);
+
+  // Radius / shadow / type, reusing our existing scale
+  --el-border-radius-base: var(--border-radius-sm);
+  --el-border-radius-small: var(--border-radius-sm);
+  --el-border-radius-round: var(--border-radius-lg);
+  --el-box-shadow: var(--shadow-md);
+  --el-box-shadow-light: var(--shadow-sm);
+  --el-box-shadow-dark: var(--shadow-lg);
+  --el-font-size-base: var(--font-size-md);
+}
+
+// Computed light/dark shade variants for buttons, tags, alerts, etc.
+// (Element doesn't derive these from the base color at runtime, so we
+// compute them ourselves with color-mix, still driven by our own vars.)
+.el-color-shades(@name, @base) {
+  --el-color-@{name}-light-3: ~'color-mix(in srgb, @{base} 70%, var(--color-background))';
+  --el-color-@{name}-light-5: ~'color-mix(in srgb, @{base} 50%, var(--color-background))';
+  --el-color-@{name}-light-7: ~'color-mix(in srgb, @{base} 30%, var(--color-background))';
+  --el-color-@{name}-light-8: ~'color-mix(in srgb, @{base} 20%, var(--color-background))';
+  --el-color-@{name}-light-9: ~'color-mix(in srgb, @{base} 10%, var(--color-background))';
+  --el-color-@{name}-dark-2: ~'color-mix(in srgb, @{base} 80%, black)';
+}
+
+:root {
+  .el-color-shades(primary, var(--color-primary));
+  .el-color-shades(success, var(--color-success));
+  .el-color-shades(warning, var(--color-warning));
+  .el-color-shades(danger, var(--color-error));
+}
+
 @color-background: var(--color-background);
 @color-background-soft: var(--color-background-soft);
 @color-background-softer: var(--color-background-softer);
