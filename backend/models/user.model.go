@@ -18,13 +18,13 @@ type User struct {
 }
 
 type UserResponse struct {
-	ID        uuid.UUID  `json:"id"`
-	FirstName string     `json:"firstName"`
-	LastName  string     `json:"lastName"`
-	Email     string     `json:"email"`
-	DeletedAt *time.Time `json:"deletedAt,omitempty"`
-	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt time.Time  `json:"updatedAt"`
+	ID        uuid.UUID  `json:"id" binding:"required"`
+	FirstName string     `json:"firstName" binding:"required"`
+	LastName  string     `json:"lastName" binding:"required"`
+	Email     string     `json:"email" binding:"required"`
+	DeletedAt *time.Time `json:"deletedAt,omitempty" binding:"required"`
+	CreatedAt time.Time  `json:"createdAt" binding:"required"`
+	UpdatedAt time.Time  `json:"updatedAt" binding:"required"`
 }
 
 func (user *User) ToResponse() *UserResponse {

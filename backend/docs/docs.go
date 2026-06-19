@@ -200,6 +200,15 @@ const docTemplate = `{
         },
         "models.UserResponse": {
             "type": "object",
+            "required": [
+                "createdAt",
+                "deletedAt",
+                "email",
+                "firstName",
+                "id",
+                "lastName",
+                "updatedAt"
+            ],
             "properties": {
                 "createdAt": {
                     "type": "string"
