@@ -44,6 +44,14 @@ definitions:
         type: string
       updatedAt:
         type: string
+    required:
+    - createdAt
+    - deletedAt
+    - email
+    - firstName
+    - id
+    - lastName
+    - updatedAt
     type: object
 host: localhost:8080
 info:
