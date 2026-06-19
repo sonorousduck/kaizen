@@ -13,7 +13,7 @@ export function isOk(response: { status: number }): boolean {
  * @param response - The API response object with status and data properties
  * @returns true if response is not OK and data is a string (error message), false otherwise
  */
-export function isErrorResponse<T>(response: { status: number, data: unknown }): response is { status: number, data: string } {
+export function isErrorResponse(response: { status: number, data: unknown }): response is { status: number, data: string } {
   return !isOk(response) && typeof response.data === 'string';
 }
 
