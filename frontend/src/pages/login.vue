@@ -38,12 +38,14 @@ function navigateToCreateAccount() {
         <el-input
           v-model="form.email"
           class="input"
+          size="large"
           type="email"
           placeholder="you@example.com" />
 
         <el-input
           v-model="form.password"
           class="input"
+          size="large"
           type="password"
           placeholder="Password"
           :show-password="true" />

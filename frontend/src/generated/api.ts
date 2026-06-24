@@ -58,7 +58,7 @@ export const getCreateUserUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_API_BASE_URL}/users`
+  return `${import.meta.env.VITE_API_BASE_URL}/public/users`
 }
 
 /**
@@ -119,7 +119,7 @@ export const getLoginUserUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_API_BASE_URL}/users/login`
+  return `${import.meta.env.VITE_API_BASE_URL}/public/users/login`
 }
 
 /**

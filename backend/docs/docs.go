@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/users": {
+        "/public/users": {
             "post": {
                 "description": "Register a new user with email and password",
                 "consumes": [
@@ -59,7 +59,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/login": {
+        "/public/users/login": {
             "post": {
                 "description": "Login with email and password, returns JWT token in cookie",
                 "consumes": [
