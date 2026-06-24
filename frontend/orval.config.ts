@@ -9,6 +9,12 @@ export default {
       httpClient: 'fetch',
       // eslint-disable-next-line no-template-curly-in-string
       baseUrl: '${import.meta.env.VITE_API_BASE_URL}',
+      override: {
+        mutator: {
+          path: './src/utils/customfetch.ts',
+          name: 'customFetch',
+        },
+      },
     },
   },
 };

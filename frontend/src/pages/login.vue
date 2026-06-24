@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
+import type { ElAlert, FormInstance, FormRules } from 'element-plus';
+import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import DuckButton from '@/components/core/DuckButton/DuckButton.vue';
+import { useAuthStore } from '@/stores/auth';
 
 const form = reactive({
   email: '',
@@ -9,14 +11,38 @@ const form = reactive({
 });
 
 const router = useRouter();
+const formRef = ref<FormInstance>();
+const auth = useAuthStore();
 
 async function onSubmit() {
-  console.log('YEET!');
+  if (!formRef.value)
+    return;
+
+  try {
+    const isValid = await formRef.value.validate();
+    if (!isValid)
+      return;
+
+    const response = await auth.login(form.email, form.password);
+
+    if (response) {
+      router.replace('/home');
+    }
+  }
+  catch {
+    // Errors are thrown if there are validation errors.
+    // I don't want to log those because I don't care
+  }
 }
 
 function navigateToCreateAccount() {
   router.push('/createAccount');
 }
+
+const rules = reactive<FormRules<typeof form>>({
+  email: [{ required: true, message: 'Please input an email', trigger: 'blur' }, { type: 'email', message: 'Please input a valid email', trigger: ['blur', 'change'] }],
+  password: [{ required: true, message: 'Password is required', trigger: 'blur' }],
+});
 </script>
 
 <template>
@@ -33,22 +59,29 @@ function navigateToCreateAccount() {
       </div>
 
       <el-form
+        ref="formRef"
         class="login-form"
+        :rules="rules"
+        status-icon
         :model="form">
-        <el-input
-          v-model="form.email"
-          class="input"
-          size="large"
-          type="email"
-          placeholder="you@example.com" />
+        <el-form-item
+          prop="email">
+          <el-input
+            v-model="form.email"
+            size="large"
+            type="email"
+            placeholder="you@example.com" />
+        </el-form-item>
 
-        <el-input
-          v-model="form.password"
-          class="input"
-          size="large"
-          type="password"
-          placeholder="Password"
-          :show-password="true" />
+        <el-form-item
+          prop="password">
+          <el-input
+            v-model="form.password"
+            size="large"
+            type="password"
+            placeholder="Password"
+            :show-password="true" />
+        </el-form-item>
 
         <div
           class="submit-buttons">
@@ -72,6 +105,12 @@ function navigateToCreateAccount() {
         </div>
       </el-form>
     </div>
+    <ElAlert
+      v-if="auth.error"
+      :title="auth.error"
+      type="error"
+      show-icon
+      :closable="false" />
   </div>
 </template>
 
@@ -87,7 +126,7 @@ function navigateToCreateAccount() {
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
 }
 
 .or-divider {
