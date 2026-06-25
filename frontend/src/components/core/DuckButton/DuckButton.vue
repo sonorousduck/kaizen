@@ -6,12 +6,14 @@ interface Props {
   type?: 'icon+text' | 'icon-only' | 'text-only'
   disabled?: boolean
   isDestructive?: boolean
+  htmlType?: 'button' | 'submit' | 'reset'
 }
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'primary',
   type: 'icon+text',
   disabled: false,
+  htmlType: 'button',
 });
 
 const buttonClasses = computed(() => {
@@ -29,6 +31,7 @@ const buttonClasses = computed(() => {
 
 <template>
   <button
+    :type="htmlType"
     :class="buttonClasses"
     :disabled="disabled">
     <slot />

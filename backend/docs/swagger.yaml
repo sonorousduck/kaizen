@@ -60,7 +60,7 @@ info:
   title: Kaizen API
   version: "1.0"
 paths:
-  /users:
+  /public/users:
     post:
       consumes:
       - application/json
@@ -89,7 +89,7 @@ paths:
           schema:
             type: string
       summary: Create a new user
-  /users/login:
+  /public/users/login:
     post:
       consumes:
       - application/json

@@ -22,7 +22,7 @@ import (
 // @Success 201 {object} models.UserResponse
 // @Failure 400 {string} string
 // @Failure 500 {string} string
-// @Router /users [post]
+// @Router /public/users [post]
 func CreateUserController(userService *services.UserService, secret []byte) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var input models.CreateUser
@@ -85,7 +85,7 @@ func generateJwtAndSetCookies(user *models.User, ctx *gin.Context, secret []byte
 // @Failure 400 {string} string
 // @Failure 403 {string} string
 // @Failure 500 {string} string
-// @Router /users/login [post]
+// @Router /public/users/login [post]
 func LoginUserController(login *services.UserService, secret []byte) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// Get the email and password off the request body
