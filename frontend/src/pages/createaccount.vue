@@ -93,7 +93,8 @@ const rules = reactive<FormRules<typeof form>>({
         class="login-form"
         :rules="rules"
         status-icon
-        :model="form">
+        :model="form"
+        @submit.prevent="onSubmit">
         <el-form-item
           prop="email">
           <el-input
@@ -151,6 +152,7 @@ const rules = reactive<FormRules<typeof form>>({
           <DuckButton
             class="login-button"
             variant="primary"
+            html-type="submit"
             @click="onSubmit">
             Create account
           </DuckButton>
