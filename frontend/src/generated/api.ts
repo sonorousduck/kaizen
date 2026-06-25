@@ -5,6 +5,7 @@
  * Goal planning + execution
  * OpenAPI spec version: 1.0
  */
+import { customFetch } from '../utils/customfetch';
 export interface ModelsCreateUser {
   email: string;
   firstName: string;
@@ -67,21 +68,14 @@ export const getCreateUserUrl = () => {
  */
 export const createUser = async (modelsCreateUser: ModelsCreateUser, options?: RequestInit): Promise<createUserResponse> => {
 
-  const res = await fetch(getCreateUserUrl(),
+  return customFetch<createUserResponse>(getCreateUserUrl(),
   {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(modelsCreateUser)
   }
-)
-
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: createUserResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as createUserResponse
-}
+);}
 
 
 
@@ -128,21 +122,14 @@ export const getLoginUserUrl = () => {
  */
 export const loginUser = async (modelsLoginUser: ModelsLoginUser, options?: RequestInit): Promise<loginUserResponse> => {
 
-  const res = await fetch(getLoginUserUrl(),
+  return customFetch<loginUserResponse>(getLoginUserUrl(),
   {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(modelsLoginUser)
   }
-)
-
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: loginUserResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as loginUserResponse
-}
+);}
 
 
 
@@ -172,21 +159,14 @@ export const getLogoutUserUrl = () => {
  */
 export const logoutUser = async ( options?: RequestInit): Promise<logoutUserResponse> => {
 
-  const res = await fetch(getLogoutUserUrl(),
+  return customFetch<logoutUserResponse>(getLogoutUserUrl(),
   {
     ...options,
     method: 'POST'
 
 
   }
-)
-
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: logoutUserResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as logoutUserResponse
-}
+);}
 
 
 
@@ -223,18 +203,11 @@ export const getGetCurrentUserUrl = () => {
  */
 export const getCurrentUser = async ( options?: RequestInit): Promise<getCurrentUserResponse> => {
 
-  const res = await fetch(getGetCurrentUserUrl(),
+  return customFetch<getCurrentUserResponse>(getGetCurrentUserUrl(),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getCurrentUserResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getCurrentUserResponse
-}
+);}
