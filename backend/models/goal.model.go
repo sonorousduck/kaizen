@@ -27,7 +27,6 @@ type Goal struct {
 	ID                uuid.UUID  `json:"id" binding:"required"`
 	UserId            uuid.UUID  `json:"userId" binding:"required"`
 	ParentGoalId      *uuid.UUID `json:"parentGoalId"`
-	CategoryId        *uuid.UUID `json:"categoryId"`
 	Title             string     `json:"title" binding:"required"`
 	Description       string     `json:"description"`
 	StartingValue     *float32   `json:"startingValue"`
@@ -40,4 +39,6 @@ type Goal struct {
 	DeletedAt         *time.Time `json:"deletedAt,omitempty"`
 	CreatedAt         time.Time  `json:"createdAt"`
 	UpdatedAt         time.Time  `json:"updatedAt"`
+	// TODO: Create category in the db table
+	CategoryId *uuid.UUID `json:"categoryId"`
 }
