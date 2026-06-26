@@ -33,7 +33,7 @@ type Goal struct {
 	TargetValue       *float32   `json:"targetValue"`
 	Unit              string     `json:"unit"`
 	FrequencyInterval int32      `json:"frequencyInterval"`
-	Frequency         *Frequency `json:"frequency" binding:"required"`
+	Frequency         Frequency  `json:"frequency" binding:"required"`
 	GoalType          GoalType   `json:"goalType" binding:"required"`
 	DueDate           *time.Time `json:"dueDate"`
 	DeletedAt         *time.Time `json:"deletedAt,omitempty"`
@@ -41,4 +41,18 @@ type Goal struct {
 	UpdatedAt         time.Time  `json:"updatedAt"`
 	// TODO: Create category in the db table
 	CategoryId *uuid.UUID `json:"categoryId"`
+}
+
+type CreateGoal struct {
+	UserId            uuid.UUID  `json:"-"`
+	ParentGoalId      *uuid.UUID `json:"parentGoalId"`
+	Title             string     `json:"title" binding:"required"`
+	Description       string     `json:"description"`
+	StartingValue     *float32   `json:"startingValue"`
+	TargetValue       *float32   `json:"targetValue"`
+	Unit              string     `json:"unit"`
+	FrequencyInterval int32      `json:"frequencyInterval"`
+	Frequency         *Frequency `json:"frequency" binding:"required"`
+	GoalType          GoalType   `json:"goalType" binding:"required"`
+	DueDate           *time.Time `json:"dueDate"`
 }
