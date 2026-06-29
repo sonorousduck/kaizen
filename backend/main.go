@@ -7,6 +7,7 @@
 package main
 
 import (
+	"backend/controllers/goals"
 	"backend/controllers/users"
 	"backend/docs"
 	"backend/initializers"
@@ -25,6 +26,7 @@ import (
 var (
 	app         *internal.App
 	userService *services.UserService
+	goalService *services.GoalService
 )
 
 func init() {
@@ -63,6 +65,7 @@ func main() {
 	authenticatedApi.Use(middleware.RequireAuth(userService, secret))
 	{
 		users.RegisterRoutes(authenticatedApi, userService)
+		goals.RegisterRoutes(authenticatedApi, goalService)
 	}
 
 	unauthenticatedApi := app.Router.Group("/public")
