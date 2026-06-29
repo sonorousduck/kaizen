@@ -1,0 +1,4 @@
+name: dev
+variables:
+  - name: localhost
+    value: http://localhost:8080
