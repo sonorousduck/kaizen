@@ -122,6 +122,37 @@ func (service *GoalService) GetGoalsForUser(ctx context.Context, userId uuid.UUI
 
 // func (service *GoalService) GetGoalsByCategory
 
+// Update endpoints
+
+func (service *GoalService) UpdateGoal(ctx context.Context, userId uuid.UUID, goalId uuid.UUID, updateGoal models.UpdateGoal) error {
+	commandTag, err := service.db.Exec(ctx,
+		`UPDATE goals SET parent_goal_id = $1, title = $2, description = $3, starting_value = $4, target_value = $5, unit = $6, frequency_interval = $7, frequency = $8, goal_type = $9, due_date = $10, updated_at = NOW()
+	WHERE id = $11 AND user_id = $12`,
+		updateGoal.ParentGoalId,
+		updateGoal.Title,
+		updateGoal.Description,
+		updateGoal.StartingValue,
+		updateGoal.TargetValue,
+		updateGoal.Unit,
+		updateGoal.FrequencyInterval,
+		updateGoal.Frequency,
+		updateGoal.GoalType,
+		updateGoal.DueDate,
+		goalId,
+		userId,
+	)
+
+	if err != nil {
+		return fmt.Errorf("Failed to update goal: %w", err)
+	}
+
+	if commandTag.RowsAffected() == 0 {
+		return fmt.Errorf("Goal id not found (id is %s)", goalId.String())
+	}
+
+	return nil
+}
+
 // Delete endpoints
 
 // Delete by id
