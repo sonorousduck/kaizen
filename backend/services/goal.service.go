@@ -72,7 +72,7 @@ func (service *GoalService) GetGoalById(ctx context.Context, goalId uuid.UUID) (
 	err := scanGoal(service.db.QueryRow(ctx,
 		`SELECT id, user_id, parent_goal_id, title, description, starting_value, target_value, unit, frequency_interval, frequency, goal_type, due_date, deleted_at, created_at, updated_at
 		FROM goals
-		WHERE id = $1`,
+		WHERE id = $1 AND deleted_at IS NULL`,
 		goalId,
 	), goal)
 
@@ -93,7 +93,7 @@ func (service *GoalService) GetGoalsForUser(ctx context.Context, userId uuid.UUI
 	rows, err := service.db.Query(ctx,
 		`SELECT id, user_id, parent_goal_id, title, description, starting_value, target_value, unit, frequency_interval, frequency, goal_type, due_date, deleted_at, created_at, updated_at
 		FROM goals
-		WHERE user_id = $1`,
+		WHERE user_id = $1 AND deleted_at IS NULL`,
 		userId,
 	)
 
@@ -125,5 +125,47 @@ func (service *GoalService) GetGoalsForUser(ctx context.Context, userId uuid.UUI
 // Delete endpoints
 
 // Delete by id
+func (service *GoalService) DeleteGoalById(ctx context.Context, goalId uuid.UUID) error {
+	var deletedId uuid.UUID
+
+	err := service.db.QueryRow(ctx,
+		`UPDATE goals
+		SET deleted_at = NOW()
+		WHERE id = $1
+		RETURNING id`,
+		goalId,
+	).Scan(&deletedId)
+
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return fmt.Errorf("Goal not found: %s", goalId.String())
+		}
+
+		return fmt.Errorf("failed to delete goal: %w", err)
+	}
+
+	return nil
+}
+
 // Delete by parent
+func (service *GoalService) DeleteGoalsByParentId(ctx context.Context, userId uuid.UUID, parentGoalId uuid.UUID) error {
+
+	updatedGoals, err := service.db.Exec(ctx,
+		`UPDATE goals
+	SET deleted_at = NOW()
+	WHERE user_id = $1 AND parent_goal_id = $2 AND deleted_at IS NULL
+	`, userId, parentGoalId,
+	)
+
+	if err != nil {
+		return fmt.Errorf("Error deleting goals by parent id: %w", err)
+	}
+
+	if updatedGoals.RowsAffected() == 0 {
+		return fmt.Errorf("No goals found for parent id: %s", parentGoalId.String())
+	}
+
+	return nil
+}
+
 // Delete by category
