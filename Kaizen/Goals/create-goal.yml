@@ -10,8 +10,9 @@ http:
     type: json
     data: |-
       {
-        "title": "Goal",
-        "description": "goal description is here",
+        "title": "A goal to be a here",
+        "parentGoalId": "f01e7940-c24d-4822-9035-99f4013bcb2c",
+        "description": "another goal description is here",
         "startingValue": 175,
         "targetValue": 150,
         "unit": "lbs",

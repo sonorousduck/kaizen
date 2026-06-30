@@ -167,14 +167,72 @@ func UpdateGoalController(goalService *services.GoalService) gin.HandlerFunc {
 	}
 }
 
+// @Summary Deletes a goal
+// @Description Deletes a goal by id
+// @ID delete-goal-by-id
+// @Param goal_id path string true "Goal ID"
+// @Success 204
+// @Failure 400 {string} string
+// @Failture 404 {string} string
+// @Failure 500 {string} string
+// @Router /goals/{goal_id} [delete]
+// @Security BearerAuth
 func DeleteGoalIdController(goalService *services.GoalService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		goalId, err := uuid.Parse(ctx.Param("goal_id"))
 
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid goal id"})
+			return
+		}
+
+		err = goalService.DeleteGoalById(ctx, goalId)
+
+		if err != nil {
+			if errors.Is(err, services.ErrGoalNotFound) {
+				ctx.JSON(http.StatusNotFound, gin.H{"error": "Goal id not found"})
+				return
+			}
+
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.Status(http.StatusNoContent)
 	}
 }
 
+// @Summary Deletes all goals by parent id
+// @Description Deletes all goals with the specified parent id
+// @ID delete-goals-by-parent-id
+// @Param parent_goal_id path string true "Parent goal ID"
+// @Success 204
+// @Failure 400 {string} string
+// @Failture 404 {string} string
+// @Failure 500 {string} string
+// @Router /goals/parentGoals/{parent_goal_id} [delete]
+// @Security BearerAuth
 func DeleteGoalsByParentIdController(goalService *services.GoalService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		parentGoalId, err := uuid.Parse(ctx.Param("parent_goal_id"))
 
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid goal id"})
+			return
+		}
+
+		err = goalService.DeleteGoalsByParentId(ctx, middleware.UserFromContext(ctx).ID, parentGoalId)
+
+		if err != nil {
+			if errors.Is(err, services.ErrGoalNotFound) {
+				ctx.JSON(http.StatusNotFound, gin.H{"error": "Parent goal id not found"})
+				return
+			}
+
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.Status(http.StatusNoContent)
 	}
 }

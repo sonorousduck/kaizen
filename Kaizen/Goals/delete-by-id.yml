@@ -1,17 +1,17 @@
 info:
-  name: get-goal-by-id
+  name: delete-by-id
   type: http
-  seq: 2
+  seq: 5
 
 http:
-  method: GET
+  method: DELETE
   url: "{{api}}goals/{{goalId}}"
   auth: inherit
 
 runtime:
   variables:
     - name: goalId
-      value: 7990e3a7-843d-48d4-99f7-14f33219f6e3
+      value: 933a911d-aad7-47dc-a786-0ba454a3d13a
 
 settings:
   encodeUrl: true
