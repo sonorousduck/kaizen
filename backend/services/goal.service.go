@@ -87,14 +87,17 @@ func (service *GoalService) GetGoalById(ctx context.Context, goalId uuid.UUID) (
 	return goal, nil
 }
 
-func (service *GoalService) GetGoalsForUser(ctx context.Context, userId uuid.UUID) ([]*models.Goal, error) {
+func (service *GoalService) GetGoalsForUser(ctx context.Context, userId uuid.UUID, filter models.PaginationFilter) ([]*models.Goal, error) {
 	var goals []*models.Goal
 
 	rows, err := service.db.Query(ctx,
 		`SELECT id, user_id, parent_goal_id, title, description, starting_value, target_value, unit, frequency_interval, frequency, goal_type, due_date, deleted_at, created_at, updated_at
 		FROM goals
-		WHERE user_id = $1 AND deleted_at IS NULL`,
-		userId,
+		WHERE user_id = $1 AND deleted_at IS NULL
+		ORDER BY created_at DESC
+		LIMIT NULLIF($2, 0) OFFSET $3
+		`,
+		userId, filter.Limit, filter.Offset,
 	)
 
 	if err != nil {

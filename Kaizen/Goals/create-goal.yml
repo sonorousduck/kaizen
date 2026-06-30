@@ -1,0 +1,27 @@
+info:
+  name: create-goal
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{api}}goals"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Goal",
+        "description": "goal description is here",
+        "startingValue": 175,
+        "targetValue": 150,
+        "unit": "lbs",
+        "frequency": "once",
+        "goalType": "numeric"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
