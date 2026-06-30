@@ -20,9 +20,9 @@ func RegisterRoutes(rg *gin.RouterGroup, goalService *services.GoalService) {
 	rg.PUT("/goals/:goal_id", UpdateGoalController(goalService))
 
 	// Delete goal by id
-	rg.PATCH("/goals/:goal_id/delete", DeleteGoalIdController(goalService))
+	rg.DELETE("/goals/:goal_id", DeleteGoalIdController(goalService))
 
 	// Delete goal by parent id
-	rg.PATCH("/goals/parentGoals/:parent_goal_id/delete", DeleteGoalsByParentIdController(goalService))
+	rg.DELETE("/goals/parentGoals/:parent_goal_id", DeleteGoalsByParentIdController(goalService))
 
 }

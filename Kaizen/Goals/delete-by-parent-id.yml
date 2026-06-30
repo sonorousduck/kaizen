@@ -1,0 +1,20 @@
+info:
+  name: delete-by-parent-id
+  type: http
+  seq: 6
+
+http:
+  method: DELETE
+  url: "{{api}}goals/parentGoals/{{parentGoalId}}"
+  auth: inherit
+
+runtime:
+  variables:
+    - name: parentGoalId
+      value: f01e7940-c24d-4822-9035-99f4013bcb2c
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

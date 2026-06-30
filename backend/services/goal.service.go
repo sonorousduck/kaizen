@@ -174,7 +174,7 @@ func (service *GoalService) DeleteGoalById(ctx context.Context, goalId uuid.UUID
 
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return fmt.Errorf("Goal not found: %s", goalId.String())
+			return ErrGoalNotFound
 		}
 
 		return fmt.Errorf("failed to delete goal: %w", err)
@@ -198,7 +198,7 @@ func (service *GoalService) DeleteGoalsByParentId(ctx context.Context, userId uu
 	}
 
 	if updatedGoals.RowsAffected() == 0 {
-		return fmt.Errorf("No goals found for parent id: %s", parentGoalId.String())
+		return ErrGoalNotFound
 	}
 
 	return nil
