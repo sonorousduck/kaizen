@@ -4,6 +4,7 @@ import (
 	"backend/middleware"
 	"backend/models"
 	"backend/services"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -45,7 +46,7 @@ func CreateGoalController(goalService *services.GoalService) gin.HandlerFunc {
 	}
 }
 
-// @Summary Retrive a goal by its id
+// @Summary Retrieve a goal by its id
 // @Description Retrieves a goal by its id
 // @ID get-goal-by-id
 // @Produce json
@@ -75,7 +76,7 @@ func GetGoalByIdController(goalService *services.GoalService) gin.HandlerFunc {
 	}
 }
 
-// @Summary Retrive goals by owner
+// @Summary Retrieve goals by owner
 // @Description Retrieves goals by the user
 // @ID get-goals-by-user
 // @Produce json
@@ -121,9 +122,48 @@ func GetGoalsForUserController(goalService *services.GoalService) gin.HandlerFun
 	}
 }
 
+// @Summary Updates goal
+// @Description Updates goals. Send ALL fields each time
+// @ID update-goal-by-id
+// @Accept json
+// @Produce json
+// @Param goal_id path string true "Goal ID"
+// @Param body body models.UpdateGoal true "Updated goal data"
+// @Success 202
+// @Failure 400 {string} string
+// @Failture 404 {string} string
+// @Failure 500 {string} string
+// @Router /goals/{goal_id} [put]
+// @Security BearerAuth
 func UpdateGoalController(goalService *services.GoalService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		var updateGoal models.UpdateGoal
 
+		goalId, err := uuid.Parse(ctx.Param("goal_id"))
+
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid goal id"})
+			return
+		}
+
+		if err := ctx.ShouldBindJSON(&updateGoal); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		err = goalService.UpdateGoal(ctx, middleware.UserFromContext(ctx).ID, goalId, updateGoal)
+
+		if err != nil {
+			if errors.Is(err, services.ErrGoalNotFound) {
+				ctx.JSON(http.StatusNotFound, gin.H{"error": "Goal not found"})
+				return
+			}
+
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.Status(http.StatusAccepted)
 	}
 }
 

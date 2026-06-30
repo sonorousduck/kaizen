@@ -19,6 +19,8 @@ func NewGoalService(db *pgxpool.Pool) *GoalService {
 	return &GoalService{db: db}
 }
 
+var ErrGoalNotFound = errors.New("goal not found")
+
 func scanGoal(row pgx.Row, goal *models.Goal) error {
 	return row.Scan(
 		&goal.ID,
@@ -150,7 +152,7 @@ func (service *GoalService) UpdateGoal(ctx context.Context, userId uuid.UUID, go
 	}
 
 	if commandTag.RowsAffected() == 0 {
-		return fmt.Errorf("Goal id not found (id is %s)", goalId.String())
+		return ErrGoalNotFound
 	}
 
 	return nil
