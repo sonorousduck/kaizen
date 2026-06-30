@@ -1,0 +1,32 @@
+info:
+  name: update-goal-by-id
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: "{{api}}goals/{{goalId}}"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "An updated goal",
+        "description": "After I updated the goal description is here",
+        "startingValue": 176,
+        "targetValue": 150,
+        "unit": "lbs",
+        "frequency": "once",
+        "goalType": "numeric"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: goalId
+      value: f6e6ab9c-eca4-4e1d-92e1-5a1ba90a6e9a
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
