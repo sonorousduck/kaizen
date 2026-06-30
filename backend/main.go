@@ -49,7 +49,7 @@ func init() {
 	app.Router.Use(cors.New(config))
 
 	userService = services.NewUserService(app.DB)
-
+	goalService = services.NewGoalService(app.DB)
 }
 
 func main() {

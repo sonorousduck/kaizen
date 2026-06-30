@@ -8,21 +8,21 @@ import (
 
 func RegisterRoutes(rg *gin.RouterGroup, goalService *services.GoalService) {
 	// Get goal by id
-	rg.GET("/goals/:goal_id")
+	rg.GET("/goals/:goal_id", GetGoalByIdController(goalService))
 
 	// Get goal for user
-	rg.GET("/goals/me")
+	rg.GET("/goals/me", GetGoalsForUserController(goalService))
 
 	// Create goal
-	rg.POST("/goals")
+	rg.POST("/goals", CreateGoalController(goalService))
 
 	// Update goal by id
-	rg.PUT("/goals/:goal_id")
+	rg.PUT("/goals/:goal_id", UpdateGoalController(goalService))
 
 	// Delete goal by id
-	rg.PATCH("/goals/:goal_id/delete")
+	rg.PATCH("/goals/:goal_id/delete", DeleteGoalIdController(goalService))
 
 	// Delete goal by parent id
-	rg.PATCH("/goals/parentGoals/:parent_goal_id/delete")
+	rg.PATCH("/goals/parentGoals/:parent_goal_id/delete", DeleteGoalsByParentIdController(goalService))
 
 }
