@@ -8,7 +8,7 @@ type GoalCategory struct {
 	Title    string    `json:"title" binding:"required"`
 	MaxGoals int32     `json:"maxGoals"`
 	Icon     string    `json:"icon" binding:"required"`
-	Color    string    `json:"iconColor" binding:"required"`
+	Color    string    `json:"color" binding:"required"`
 }
 
 type CreateGoalCategory struct {
@@ -16,12 +16,12 @@ type CreateGoalCategory struct {
 	Title    string    `json:"title" binding:"required"`
 	MaxGoals int32     `json:"maxGoals"`
 	Icon     string    `json:"icon" binding:"required"`
-	Color    string    `json:"iconColor" binding:"required"`
+	Color    string    `json:"color" binding:"required"`
 }
 
 type UpdateGoalCategory struct {
 	Title    string `json:"title" binding:"required"`
 	MaxGoals int32  `json:"maxGoals"`
 	Icon     string `json:"icon" binding:"required"`
-	Color    string `json:"iconColor" binding:"required"`
+	Color    string `json:"color" binding:"required"`
 }
