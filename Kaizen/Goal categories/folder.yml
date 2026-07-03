@@ -1,0 +1,7 @@
+info:
+  name: Goal categories
+  type: folder
+  seq: 3
+
+request:
+  auth: inherit

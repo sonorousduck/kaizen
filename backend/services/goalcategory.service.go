@@ -44,8 +44,8 @@ func (service *GoalCategoryService) CreateGoalCategory(ctx context.Context, crea
 		createGoalCategory.UserId,
 		createGoalCategory.Title,
 		createGoalCategory.MaxGoals,
-		createGoalCategory.Icon,
 		createGoalCategory.Color,
+		createGoalCategory.Icon,
 	), goalCategory)
 
 	if err != nil {

@@ -1,0 +1,24 @@
+info:
+  name: create-goal-category
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{api}}goalCategories"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Physical",
+        "maxGoals": -1,
+        "icon": "?",
+        "color": "#16a085"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
