@@ -10,3 +10,18 @@ type GoalCategory struct {
 	Icon     string    `json:"icon" binding:"required"`
 	Color    string    `json:"iconColor" binding:"required"`
 }
+
+type CreateGoalCategory struct {
+	UserId   uuid.UUID `json:"-"`
+	Title    string    `json:"title" binding:"required"`
+	MaxGoals int32     `json:"maxGoals"`
+	Icon     string    `json:"icon" binding:"required"`
+	Color    string    `json:"iconColor" binding:"required"`
+}
+
+type UpdateGoalCategory struct {
+	Title    string `json:"title" binding:"required"`
+	MaxGoals int32  `json:"maxGoals"`
+	Icon     string `json:"icon" binding:"required"`
+	Color    string `json:"iconColor" binding:"required"`
+}

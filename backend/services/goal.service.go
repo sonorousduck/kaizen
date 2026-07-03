@@ -83,7 +83,7 @@ func (service *GoalService) GetGoalById(ctx context.Context, goalId uuid.UUID) (
 	}
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to get goa: %w", err)
+		return nil, fmt.Errorf("Failed to get goal: %w", err)
 	}
 
 	return goal, nil
@@ -105,7 +105,6 @@ func (service *GoalService) GetGoalsForUser(ctx context.Context, userId uuid.UUI
 	if err != nil {
 		return nil, fmt.Errorf("Failed to get goals for user: %w", err)
 	}
-
 	defer rows.Close()
 
 	for rows.Next() {
@@ -126,8 +125,6 @@ func (service *GoalService) GetGoalsForUser(ctx context.Context, userId uuid.UUI
 }
 
 // func (service *GoalService) GetGoalsByCategory
-
-// Update endpoints
 
 func (service *GoalService) UpdateGoal(ctx context.Context, userId uuid.UUID, goalId uuid.UUID, updateGoal models.UpdateGoal) error {
 	commandTag, err := service.db.Exec(ctx,
