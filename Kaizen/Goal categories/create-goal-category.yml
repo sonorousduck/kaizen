@@ -10,7 +10,7 @@ http:
     type: json
     data: |-
       {
-        "title": "Physical",
+        "title": "Mental",
         "maxGoals": -1,
         "icon": "?",
         "color": "#16a085"

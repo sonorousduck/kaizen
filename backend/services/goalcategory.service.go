@@ -89,7 +89,7 @@ func (service *GoalCategoryService) GetGoalCategoriesByUserId(ctx context.Contex
 }
 
 func (service *GoalCategoryService) GetGoalCategoriesById(ctx context.Context, id uuid.UUID) (*models.GoalCategory, error) {
-	var goalCategory *models.GoalCategory
+	goalCategory := &models.GoalCategory{}
 
 	err := scanGoalCategory(service.db.QueryRow(ctx,
 		`SELECT id, user_id, title, max_goals, icon, color 
