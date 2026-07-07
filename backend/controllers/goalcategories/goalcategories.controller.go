@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 // @Summary Create a new goal category
@@ -67,5 +68,40 @@ func GetGoalCategoriesForUser(goalCategoryService *services.GoalCategoryService)
 		}
 
 		ctx.JSON(http.StatusOK, goalCategories)
+	}
+}
+
+// @Summary Retrieve goals categories by owner
+// @Description Retrieves goal categories by the authenticated user
+// @ID get-goal-categories-by-user
+// @Param goal_category_id path string true "Goal category id"
+// @Produce json
+// @Success 200 {object} models.GoalCategory
+// @Failure 404 {string} string
+// @Failure 500 {string} string
+// @Router /goalCategories/{goal_category_id} [get]
+// @Security BearerAuth
+func GetGoalCategoriesById(goalCategoryService *services.GoalCategoryService) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		goalCategoryId, err := uuid.Parse(ctx.Param("goal_category_id"))
+
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		goalCategory, err := goalCategoryService.GetGoalCategoriesById(ctx, goalCategoryId)
+
+		if err != nil {
+			if err == services.ErrGoalCategoryNotFound {
+				ctx.JSON(http.StatusNotFound, gin.H{"error": "goal category not found"})
+				return
+			}
+
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, goalCategory)
 	}
 }

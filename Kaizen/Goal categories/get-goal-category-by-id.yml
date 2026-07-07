@@ -1,0 +1,20 @@
+info:
+  name: get-goal-category-by-id
+  type: http
+  seq: 3
+
+http:
+  method: GET
+  url: "{{api}}goalCategories/{{goalCategory}}"
+  auth: inherit
+
+runtime:
+  variables:
+    - name: goalCategory
+      value: 63a65375-5c31-44e5-ab64-e265719f3419
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
