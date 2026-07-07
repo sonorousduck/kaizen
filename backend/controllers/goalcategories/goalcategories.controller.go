@@ -4,6 +4,7 @@ import (
 	"backend/middleware"
 	"backend/models"
 	"backend/services"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -103,5 +104,52 @@ func GetGoalCategoriesById(goalCategoryService *services.GoalCategoryService) gi
 		}
 
 		ctx.JSON(http.StatusOK, goalCategory)
+	}
+}
+
+// @Summary Updates goal category
+// @Description Updates goal category. Send ALL fields each time
+// @ID update-goal-category-by-id
+// @Accept json
+// @Produce json
+// @Param goal_category_id path string true "Goal ID"
+// @Param body body models.UpdateGoalCategory true "Updated goal category data"
+// @Success 202
+// @Failure 400 {string} string
+// @Failture 404 {string} string
+// @Failure 500 {string} string
+// @Router /goalCategories/{goal_category_id} [put]
+// @Security BearerAuth
+func UpdateGoalCategoryById(goalCategoryService *services.GoalCategoryService) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		goalCategoryId, err := uuid.Parse(ctx.Param("goal_category_id"))
+
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		userId := middleware.UserFromContext(ctx).ID
+
+		var updateGoalCategory models.UpdateGoalCategory
+
+		if err := ctx.ShouldBindJSON(&updateGoalCategory); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		err = goalCategoryService.UpdateGoalCategory(ctx, userId, goalCategoryId, updateGoalCategory)
+
+		if err != nil {
+			if errors.Is(err, services.ErrGoalNotFound) {
+				ctx.JSON(http.StatusNotFound, gin.H{"error": "Goal category not found"})
+				return
+			}
+
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.Status(http.StatusAccepted)
 	}
 }

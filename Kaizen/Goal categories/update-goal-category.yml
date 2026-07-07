@@ -1,0 +1,28 @@
+info:
+  name: update-goal-category
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: "{{api}}goalCategories/{{goalCategoryId}}"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Mental",
+        "icon": "?>",
+        "color": "yellow"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: goalCategoryId
+      value: 63a65375-5c31-44e5-ab64-e265719f3419
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
