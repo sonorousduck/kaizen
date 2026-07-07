@@ -47,3 +47,25 @@ func CreateGoalCategoryController(goalCategoryService *services.GoalCategoryServ
 		ctx.JSON(http.StatusCreated, goalCategory)
 	}
 }
+
+// @Summary Retrieve goals categories by owner
+// @Description Retrieves goal categories by the authenticated user
+// @ID get-goal-categories-by-user
+// @Produce json
+// @Success 200 {object} []models.GoalCategory
+// @Failure 500 {string} string
+// @Router /goalCategories/me [get]
+// @Security BearerAuth
+func GetGoalCategoriesForUser(goalCategoryService *services.GoalCategoryService) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		userId := middleware.UserFromContext(ctx).ID
+
+		goalCategories, err := goalCategoryService.GetGoalCategoriesByUserId(ctx, userId)
+
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+
+		ctx.JSON(http.StatusOK, goalCategories)
+	}
+}
