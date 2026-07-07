@@ -92,7 +92,7 @@ func (service *GoalCategoryService) GetGoalCategoriesById(ctx context.Context, i
 	goalCategory := &models.GoalCategory{}
 
 	err := scanGoalCategory(service.db.QueryRow(ctx,
-		`SELECT id, user_id, title, max_goals, icon, color 
+		`SELECT id, user_id, title, max_goals, color, icon 
 		FROM goal_categories
 		WHERE id = $1`,
 		id,
@@ -111,14 +111,15 @@ func (service *GoalCategoryService) GetGoalCategoriesById(ctx context.Context, i
 
 // UPDATE
 
-func (service *GoalCategoryService) UpdateGoalCategory(ctx context.Context, goalCategoryId uuid.UUID, updateGoalCategory models.UpdateGoalCategory) error {
+func (service *GoalCategoryService) UpdateGoalCategory(ctx context.Context, userId uuid.UUID, goalCategoryId uuid.UUID, updateGoalCategory models.UpdateGoalCategory) error {
 	commandTag, err := service.db.Exec(ctx,
-		`UPDATE goal_categories SET title = $1, max_goals = $2, icon = $3, color = $4 WHERE id = $5`,
+		`UPDATE goal_categories SET title = $1, max_goals = $2, icon = $3, color = $4 WHERE id = $5 AND user_id = $6`,
 		updateGoalCategory.Title,
 		updateGoalCategory.MaxGoals,
 		updateGoalCategory.Icon,
 		updateGoalCategory.Color,
 		goalCategoryId,
+		userId,
 	)
 
 	if err != nil {
