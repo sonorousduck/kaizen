@@ -114,7 +114,7 @@ func GetGoalCategoriesById(goalCategoryService *services.GoalCategoryService) gi
 // @Produce json
 // @Param goal_category_id path string true "Goal ID"
 // @Param body body models.UpdateGoalCategory true "Updated goal category data"
-// @Success 202
+// @Success 204
 // @Failure 400 {string} string
 // @Failture 404 {string} string
 // @Failure 500 {string} string
@@ -150,6 +150,43 @@ func UpdateGoalCategoryById(goalCategoryService *services.GoalCategoryService) g
 			return
 		}
 
-		ctx.Status(http.StatusAccepted)
+		ctx.Status(http.StatusNoContent)
+	}
+}
+
+// @Summary Deletes goal category
+// @Description Deletes goal category.
+// @ID delete-goal-category-by-id
+// @Produce json
+// @Param goal_category_id path string true "Goal ID"
+// @Success 204
+// @Failure 400 {string} string
+// @Failture 404 {string} string
+// @Failure 500 {string} string
+// @Router /goalCategories/{goal_category_id} [delete]
+// @Security BearerAuth
+func DeleteGoalCategoryById(goalCategoryService *services.GoalCategoryService) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		goalCategoryId, err := uuid.Parse(ctx.Param("goal_category_id"))
+
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		userId := middleware.UserFromContext(ctx).ID
+		err = goalCategoryService.DeleteGoalCategoryById(ctx, goalCategoryId, userId)
+
+		if err != nil {
+			if errors.Is(err, services.ErrGoalNotFound) {
+				ctx.JSON(http.StatusNotFound, gin.H{"error": "Goal category not found"})
+				return
+			}
+
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.Status(http.StatusNoContent)
 	}
 }
