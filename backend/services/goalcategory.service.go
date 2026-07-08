@@ -134,14 +134,14 @@ func (service *GoalCategoryService) UpdateGoalCategory(ctx context.Context, user
 }
 
 // DELETE
-func (service *GoalCategoryService) DeleteGoalCategoryById(ctx context.Context, goalCategoryId uuid.UUID) error {
+func (service *GoalCategoryService) DeleteGoalCategoryById(ctx context.Context, goalCategoryId uuid.UUID, userId uuid.UUID) error {
 	var deletedId uuid.UUID
 
 	err := service.db.QueryRow(ctx,
 		`DELETE FROM goal_categories
-	WHERE id = $1
+	WHERE id = $1 AND user_id = $2
 	RETURNING id
-	`, goalCategoryId,
+	`, goalCategoryId, userId,
 	).Scan(&deletedId)
 
 	if err != nil {

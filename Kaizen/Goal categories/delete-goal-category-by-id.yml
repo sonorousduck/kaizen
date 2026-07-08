@@ -1,0 +1,20 @@
+info:
+  name: delete-goal-category-by-id
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: "{{api}}goalCategories/{{goalCategoryId}}"
+  auth: inherit
+
+runtime:
+  variables:
+    - name: goalCategoryId
+      value: 026de74f-2389-4fe0-967f-6e2cb06bffa0
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
