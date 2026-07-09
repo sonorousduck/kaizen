@@ -1,0 +1,28 @@
+info:
+  name: create-goal-entry
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{api}}goals/{{goalId}}/goalEntries"
+  body:
+    type: json
+    data: |-
+      {
+        "value": 178.4,
+        "note": "Hackathon has too much delicious food",
+        "date": "2026-07-09T12:55:33.488Z"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: goalId
+      value: f6e6ab9c-eca4-4e1d-92e1-5a1ba90a6e9a
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
