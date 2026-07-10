@@ -68,6 +68,20 @@ func (service *GoalService) CreateGoal(ctx context.Context, createGoal models.Cr
 	return goal, nil
 }
 
+func (service *GoalService) UserOwnsGoal(ctx context.Context, goalId uuid.UUID, userId uuid.UUID) (bool, error) {
+	var exists bool
+
+	err := service.db.QueryRow(ctx,
+		`SELECT EXISTS(SELECT 1 FROM goals WHERE id = $1 AND user_id = $2)`,
+		goalId, userId).Scan(&exists)
+
+	if err != nil {
+		return false, fmt.Errorf("failed to check goal membership: %w", err)
+	}
+
+	return exists, nil
+}
+
 func (service *GoalService) GetGoalById(ctx context.Context, goalId uuid.UUID) (*models.Goal, error) {
 	goal := &models.Goal{}
 
