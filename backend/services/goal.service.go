@@ -38,6 +38,7 @@ func scanGoal(row pgx.Row, goal *models.Goal) error {
 		&goal.DeletedAt,
 		&goal.CreatedAt,
 		&goal.UpdatedAt,
+		&goal.CategoryId,
 	)
 }
 
@@ -45,9 +46,9 @@ func (service *GoalService) CreateGoal(ctx context.Context, createGoal models.Cr
 	goal := &models.Goal{}
 
 	err := scanGoal(service.db.QueryRow(ctx,
-		`INSERT INTO goals (user_id, parent_goal_id, title, description, starting_value, target_value, unit, frequency_interval, frequency, goal_type, due_date)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-		RETURNING id, user_id, parent_goal_id, title, description, starting_value, target_value, unit, frequency_interval, frequency, goal_type, due_date, deleted_at, created_at, updated_at`,
+		`INSERT INTO goals (user_id, parent_goal_id, title, description, starting_value, target_value, unit, frequency_interval, frequency, goal_type, due_date, category_id)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+		RETURNING id, user_id, parent_goal_id, title, description, starting_value, target_value, unit, frequency_interval, frequency, goal_type, due_date, deleted_at, created_at, updated_at, category_id`,
 		createGoal.UserId,
 		createGoal.ParentGoalId,
 		createGoal.Title,
@@ -59,6 +60,7 @@ func (service *GoalService) CreateGoal(ctx context.Context, createGoal models.Cr
 		createGoal.Frequency,
 		createGoal.GoalType,
 		createGoal.DueDate,
+		createGoal.CategoryId,
 	), goal)
 
 	if err != nil {
@@ -86,7 +88,7 @@ func (service *GoalService) GetGoalById(ctx context.Context, goalId uuid.UUID) (
 	goal := &models.Goal{}
 
 	err := scanGoal(service.db.QueryRow(ctx,
-		`SELECT id, user_id, parent_goal_id, title, description, starting_value, target_value, unit, frequency_interval, frequency, goal_type, due_date, deleted_at, created_at, updated_at
+		`SELECT id, user_id, parent_goal_id, title, description, starting_value, target_value, unit, frequency_interval, frequency, goal_type, due_date, deleted_at, created_at, updated_at, category_id
 		FROM goals
 		WHERE id = $1 AND deleted_at IS NULL`,
 		goalId,
@@ -107,7 +109,7 @@ func (service *GoalService) GetGoalsForUser(ctx context.Context, userId uuid.UUI
 	var goals []*models.Goal
 
 	rows, err := service.db.Query(ctx,
-		`SELECT id, user_id, parent_goal_id, title, description, starting_value, target_value, unit, frequency_interval, frequency, goal_type, due_date, deleted_at, created_at, updated_at
+		`SELECT id, user_id, parent_goal_id, title, description, starting_value, target_value, unit, frequency_interval, frequency, goal_type, due_date, deleted_at, created_at, updated_at, category_id
 		FROM goals
 		WHERE user_id = $1 AND deleted_at IS NULL
 		ORDER BY created_at DESC
@@ -138,12 +140,45 @@ func (service *GoalService) GetGoalsForUser(ctx context.Context, userId uuid.UUI
 	return goals, nil
 }
 
-// func (service *GoalService) GetGoalsByCategory
+func (service *GoalService) GetGoalsByCategory(ctx context.Context, userId uuid.UUID, categoryId uuid.UUID, filter models.PaginationFilter) ([]*models.Goal, error) {
+	var goals []*models.Goal
+
+	rows, err := service.db.Query(ctx,
+		`SELECT id, user_id, parent_goal_id, title, description, starting_value, target_value, unit, frequency_interval, frequency, goal_type, due_date, deleted_at, created_at, updated_at, category_id
+		FROM goals
+		WHERE user_id = $1 AND category_id = $2 AND deleted_at IS NULL
+		ORDER BY created_at DESC
+		LIMIT NULLIF($3, 0) OFFSET $4
+		`,
+		userId, categoryId, filter.Limit, filter.Offset,
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to get goals for category: %w", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		goal := &models.Goal{}
+
+		if err := scanGoal(rows, goal); err != nil {
+			return nil, fmt.Errorf("scan failed: %w", err)
+		}
+
+		goals = append(goals, goal)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("failed to iterate all the goals: %w", err)
+	}
+
+	return goals, nil
+}
 
 func (service *GoalService) UpdateGoal(ctx context.Context, userId uuid.UUID, goalId uuid.UUID, updateGoal models.UpdateGoal) error {
 	commandTag, err := service.db.Exec(ctx,
-		`UPDATE goals SET parent_goal_id = $1, title = $2, description = $3, starting_value = $4, target_value = $5, unit = $6, frequency_interval = $7, frequency = $8, goal_type = $9, due_date = $10, updated_at = NOW()
-	WHERE id = $11 AND user_id = $12`,
+		`UPDATE goals SET parent_goal_id = $1, title = $2, description = $3, starting_value = $4, target_value = $5, unit = $6, frequency_interval = $7, frequency = $8, goal_type = $9, due_date = $10, updated_at = NOW(), category_id = $11
+	WHERE id = $12 AND user_id = $13`,
 		updateGoal.ParentGoalId,
 		updateGoal.Title,
 		updateGoal.Description,
@@ -154,6 +189,7 @@ func (service *GoalService) UpdateGoal(ctx context.Context, userId uuid.UUID, go
 		updateGoal.Frequency,
 		updateGoal.GoalType,
 		updateGoal.DueDate,
+		updateGoal.CategoryId,
 		goalId,
 		userId,
 	)

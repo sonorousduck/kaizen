@@ -108,6 +108,45 @@ func GetGoalsForUserController(goalService *services.GoalService) gin.HandlerFun
 	}
 }
 
+// @Summary Retrieve goals by category id
+// @Description Retrieves goals by the category id
+// @ID get-goals-by-category
+// @Produce json
+// @Param category_id path string true "Category id "
+// @Param limit query integer false "Limit number of results"
+// @Param offset query integer false "Offset for pagination"
+// @Success 200 {object} []models.Goal
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /goals/categories/{category_id} [get]
+// @Security BearerAuth
+func GetGoalsForCategoryController(goalService *services.GoalService) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		filter, err := controllers.GetPaginationFilterFromContext(ctx)
+
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		categoryId, err := uuid.Parse(ctx.Param("category_id"))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		userId := middleware.UserFromContext(ctx).ID
+		goals, err := goalService.GetGoalsByCategory(ctx, userId, categoryId, *filter)
+
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, goals)
+	}
+}
+
 // @Summary Updates goal
 // @Description Updates goals. Send ALL fields each time
 // @ID update-goal-by-id

@@ -17,7 +17,8 @@ http:
         "targetValue": 150,
         "unit": "lbs",
         "frequency": "once",
-        "goalType": "numeric"
+        "goalType": "numeric",
+        "categoryId": "71c0530a-c1f4-4cde-9a89-5f7aaba42b43"
       }
   auth: inherit
 
