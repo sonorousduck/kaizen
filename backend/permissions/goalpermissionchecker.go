@@ -19,7 +19,7 @@ func NewGoalPermissionChecker(goalService *services.GoalService) *GoalPermission
 
 func (goalPermissionChecker *GoalPermissionChecker) AuthUserHasPermissionOnGoal(ctx *gin.Context, authUser *models.User, goalId uuid.UUID) (bool, error) {
 	if authUser == nil {
-		return false, fmt.Errorf("error", "unauthorized")
+		return false, fmt.Errorf("unauthorized")
 	}
 
 	return goalPermissionChecker.goalService.UserOwnsGoal(ctx, goalId, authUser.ID)
