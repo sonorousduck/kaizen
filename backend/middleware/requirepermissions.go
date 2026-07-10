@@ -10,7 +10,7 @@ import (
 
 func RequireGoalPermission(goalPermissionChecker *permissions.GoalPermissionChecker) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		goalId, err := uuid.Parse(ctx.Param("goalId"))
+		goalId, err := uuid.Parse(ctx.Param("goal_id"))
 
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid goal id"})

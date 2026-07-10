@@ -8,12 +8,14 @@ package main
 
 import (
 	"backend/controllers/goalcategories"
+	"backend/controllers/goalentries"
 	"backend/controllers/goals"
 	"backend/controllers/users"
 	"backend/docs"
 	"backend/initializers"
 	"backend/internal"
 	"backend/middleware"
+	"backend/permissions"
 	"backend/services"
 	"log"
 	"net/http"
@@ -25,10 +27,12 @@ import (
 )
 
 var (
-	app                 *internal.App
-	userService         *services.UserService
-	goalService         *services.GoalService
-	goalCategoryService *services.GoalCategoryService
+	app                   *internal.App
+	userService           *services.UserService
+	goalService           *services.GoalService
+	goalCategoryService   *services.GoalCategoryService
+	goalPermissionChecker *permissions.GoalPermissionChecker
+	goalEntryService      *services.GoalEntryService
 )
 
 func init() {
@@ -53,6 +57,8 @@ func init() {
 	userService = services.NewUserService(app.DB)
 	goalService = services.NewGoalService(app.DB)
 	goalCategoryService = services.NewGoalCategoryService(app.DB)
+	goalPermissionChecker = permissions.NewGoalPermissionChecker(goalService)
+	goalEntryService = services.NewGoalEntryService(app.DB)
 }
 
 func main() {
@@ -70,6 +76,7 @@ func main() {
 		users.RegisterRoutes(authenticatedApi, userService)
 		goals.RegisterRoutes(authenticatedApi, goalService)
 		goalcategories.RegisterRoutes(authenticatedApi, goalCategoryService)
+		goalentries.RegisterRoutes(authenticatedApi, goalEntryService, *goalPermissionChecker)
 	}
 
 	unauthenticatedApi := app.Router.Group("/public")
