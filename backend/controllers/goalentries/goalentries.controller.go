@@ -158,7 +158,7 @@ func UpdateGoalEntryController(goalEntryService *services.GoalEntryService) gin.
 		err = goalEntryService.UpdateGoalEntry(ctx, goalEntryId, updateGoalEntry)
 
 		if err != nil {
-			if errors.Is(err, services.ErrGoalNotFound) {
+			if errors.Is(err, services.ErrGoalEntryNotFound) {
 				ctx.JSON(http.StatusNotFound, gin.H{"error": "goal entry not found"})
 				return
 			}
@@ -171,4 +171,38 @@ func UpdateGoalEntryController(goalEntryService *services.GoalEntryService) gin.
 	}
 }
 
-// Delete goal entry
+// @Summary Deletes a goal entry
+// @Description Deletes a goal entry by id
+// @ID delete-goal-entry-by-id
+// @Param goal_id path string true "Goal ID"
+// @Param goal_entry_id path string true "Goal entry ID"
+// @Success 204
+// @Failure 400 {string} string
+// @Failture 404 {string} string
+// @Failure 500 {string} string
+// @Router /goals/{goal_id}/goalEntries/{goal_entry_id} [delete]
+// @Security BearerAuth
+func DeleteGoalEntryController(goalEntryService *services.GoalEntryService) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		goalEntryId, err := uuid.Parse(ctx.Param("goal_entry_id"))
+
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid goal entry id"})
+			return
+		}
+
+		err = goalEntryService.DeleteGoalEntry(ctx, goalEntryId)
+
+		if err != nil {
+			if errors.Is(err, services.ErrGoalEntryNotFound) {
+				ctx.JSON(http.StatusNotFound, gin.H{"error": "Goal entry id not found"})
+				return
+			}
+
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.Status(http.StatusNoContent)
+	}
+}

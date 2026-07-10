@@ -19,5 +19,5 @@ func RegisterRoutes(rg *gin.RouterGroup, goalEntriesService *services.GoalEntryS
 	rg.PUT("/goals/:goal_id/goalEntries/:goal_entry_id", middleware.RequireGoalPermission(&goalPermissionChecker), UpdateGoalEntryController(goalEntriesService))
 
 	// Delete goal entry
-	rg.DELETE("/goals/:goal_id/goalEntries/:goal_entry_id", middleware.RequireGoalPermission(&goalPermissionChecker))
+	rg.DELETE("/goals/:goal_id/goalEntries/:goal_entry_id", middleware.RequireGoalPermission(&goalPermissionChecker), DeleteGoalEntryController(goalEntriesService))
 }

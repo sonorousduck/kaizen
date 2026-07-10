@@ -1,0 +1,22 @@
+info:
+  name: delete-goal-entry
+  type: http
+  seq: 4
+
+http:
+  method: DELETE
+  url: "{{api}}goals/{{goalId}}/goalEntries/{{goalEntryId}}"
+  auth: inherit
+
+runtime:
+  variables:
+    - name: goalId
+      value: f6e6ab9c-eca4-4e1d-92e1-5a1ba90a6e9a
+    - name: goalEntryId
+      value: 93b9e893-e3a6-46c7-bc51-b0e30d95caed
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
