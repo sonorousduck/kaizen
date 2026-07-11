@@ -19,6 +19,7 @@ import (
 // @ID create-goal-entry
 // @Accept json
 // @Produce json
+// @Param goal_id path string true "Goal ID"
 // @Param body body models.CreateGoalEntry true "Goal entry creation data"
 // @Success 201 {object} models.GoalEntry
 // @Faiure 400 {string} string
@@ -59,12 +60,13 @@ func CreateGoalEntryController(goalEntryService *services.GoalEntryService) gin.
 // @Param goal_id path string true "Goal ID"
 // @Param limit query integer false "Limit number of results"
 // @Param offset query integer false "Offset for pagination"
-// @Param startDate query date false "Optional filter for start date"
-// @Param endDate query date false "Optional filter for end date"
+// @Param startDate query string false "Optional filter for start date"
+// @Param endDate query string false "Optional filter for end date"
 // @Success 200 {object} []models.GoalEntry
 // @Failure 400 {string} string
 // @Failure 500 {string} string
-// @Router /goals/{goal_id}/goalEntries
+// @Router /goals/{goal_id}/goalEntries [get]
+// @Security BearerAuth
 func GetGoalEntriesController(goalEntryService *services.GoalEntryService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		userId := middleware.UserFromContext(ctx).ID
