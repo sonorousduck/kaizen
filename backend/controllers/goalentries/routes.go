@@ -13,7 +13,7 @@ func RegisterRoutes(rg *gin.RouterGroup, goalEntriesService *services.GoalEntryS
 	rg.POST("/goals/:goal_id/goalEntries", middleware.RequireGoalPermission(&goalPermissionChecker), CreateGoalEntryController(goalEntriesService))
 
 	// Get goals by goal id
-	rg.GET("/goals/:goal_id/goalEntries", middleware.RequireGoalPermission(&goalPermissionChecker))
+	rg.GET("/goals/:goal_id/goalEntries", middleware.RequireGoalPermission(&goalPermissionChecker), GetGoalEntriesController(goalEntriesService))
 
 	// Update goal entry
 	rg.PUT("/goals/:goal_id/goalEntries/:goal_entry_id", middleware.RequireGoalPermission(&goalPermissionChecker))

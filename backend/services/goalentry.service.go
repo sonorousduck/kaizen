@@ -5,7 +5,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -54,42 +53,7 @@ func (service *GoalEntryService) CreateGoalEntry(ctx context.Context, createGoal
 	return goalEntry, nil
 }
 
-func (service *GoalEntryService) GetGoalEntriesForGoal(ctx context.Context, goalId uuid.UUID, filter models.PaginationFilter) ([]*models.GoalEntry, error) {
-	var goalEntries []*models.GoalEntry
-
-	rows, err := service.db.Query(ctx,
-		`SELECT id, goal_id, value, note, date, created_at
-		FROM goal_entries
-		WHERE goal_id = $1
-		ORDER BY date DESC
-		LIMIT NULLIF($2, 0) OFFSET $3
-		`, goalId, filter.Limit, filter.Offset,
-	)
-
-	if err != nil {
-		return nil, fmt.Errorf("Failed to get goal entries for goal: %w", err)
-	}
-
-	defer rows.Close()
-
-	for rows.Next() {
-		goalEntry := &models.GoalEntry{}
-
-		if err := scanGoalEntry(rows, goalEntry); err != nil {
-			return nil, fmt.Errorf("scan failed: %w", err)
-		}
-
-		goalEntries = append(goalEntries, goalEntry)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("failed to iterate all the goal entries: %w", err)
-	}
-
-	return goalEntries, nil
-}
-
-func (service *GoalEntryService) GetGoalEntriesByDate(ctx context.Context, userId uuid.UUID, startDate time.Time, endDate time.Time, filter models.PaginationFilter) ([]*models.GoalEntry, error) {
+func (service *GoalEntryService) GetGoalEntries(ctx context.Context, filter models.GoalEntryFilter) ([]*models.GoalEntry, error) {
 	var goalEntries []*models.GoalEntry
 
 	rows, err := service.db.Query(ctx,
@@ -97,15 +61,17 @@ func (service *GoalEntryService) GetGoalEntriesByDate(ctx context.Context, userI
 		FROM goal_entries goalEntry
 		JOIN goals ON goals.id = goalEntry.goal_id
 		WHERE goals.user_id = $1
-			AND goalEntry.date >= $2
-			AND goalEntry.date <= $3
+			AND ($2::uuid IS NULL OR goalEntry.goal_id = $2)
+			AND ($3::timestamptz IS NULL OR goalEntry.date >= $3)
+			AND ($4::timestamptz IS NULL OR goalEntry.date <= $4)
 		ORDER BY goalEntry.date DESC
-		LIMIT NULLIF($4, 0) OFFSET $5`,
-		userId,
-		startDate,
-		endDate,
-		filter.Limit,
-		filter.Offset,
+		LIMIT NULLIF($5, 0) OFFSET $6`,
+		filter.UserID,
+		filter.GoalID,
+		filter.StartDate,
+		filter.EndDate,
+		filter.PaginationFilter.Limit,
+		filter.PaginationFilter.Offset,
 	)
 
 	if err != nil {

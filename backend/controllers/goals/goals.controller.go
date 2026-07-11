@@ -1,13 +1,13 @@
 package goals
 
 import (
+	"backend/controllers"
 	"backend/middleware"
 	"backend/models"
 	"backend/services"
 	"errors"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -89,29 +89,15 @@ func GetGoalByIdController(goalService *services.GoalService) gin.HandlerFunc {
 // @Security BearerAuth
 func GetGoalsForUserController(goalService *services.GoalService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		filter := models.PaginationFilter{}
+		filter, err := controllers.GetPaginationFilterFromContext(ctx)
 
-		if limitRaw := ctx.Query("limit"); limitRaw != "" {
-			limit, err := strconv.Atoi(limitRaw)
-			if err != nil || limit < 0 {
-				ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid limit query"})
-				return
-			}
-			filter.Limit = limit
-		}
-
-		if offsetRaw := ctx.Query("offset"); offsetRaw != "" {
-			offset, err := strconv.Atoi(offsetRaw)
-			if err != nil || offset < 0 {
-				ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid offset query"})
-				return
-			}
-
-			filter.Offset = offset
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
 		}
 
 		userId := middleware.UserFromContext(ctx).ID
-		goals, err := goalService.GetGoalsForUser(ctx, userId, filter)
+		goals, err := goalService.GetGoalsForUser(ctx, userId, *filter)
 
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

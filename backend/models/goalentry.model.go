@@ -27,3 +27,11 @@ type UpdateGoalEntry struct {
 	Note  *string   `json:"note"`
 	Date  time.Time `json:"date" binding:"required"`
 }
+
+type GoalEntryFilter struct {
+	UserID           uuid.UUID
+	GoalID           *uuid.UUID
+	StartDate        *time.Time
+	EndDate          *time.Time
+	PaginationFilter PaginationFilter
+}
