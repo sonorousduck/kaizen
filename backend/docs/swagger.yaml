@@ -1,5 +1,61 @@
 basePath: /
 definitions:
+  models.CreateGoal:
+    properties:
+      categoryId:
+        type: string
+      description:
+        type: string
+      dueDate:
+        type: string
+      frequency:
+        $ref: '#/definitions/models.Frequency'
+      frequencyInterval:
+        type: integer
+      goalType:
+        $ref: '#/definitions/models.GoalType'
+      parentGoalId:
+        type: string
+      startingValue:
+        type: number
+      targetValue:
+        type: number
+      title:
+        type: string
+      unit:
+        type: string
+    required:
+    - frequency
+    - goalType
+    - title
+    type: object
+  models.CreateGoalCategory:
+    properties:
+      color:
+        type: string
+      icon:
+        type: string
+      maxGoals:
+        type: integer
+      title:
+        type: string
+    required:
+    - color
+    - icon
+    - title
+    type: object
+  models.CreateGoalEntry:
+    properties:
+      date:
+        type: string
+      note:
+        type: string
+      value:
+        type: number
+    required:
+    - date
+    - value
+    type: object
   models.CreateUser:
     properties:
       email:
@@ -17,6 +73,111 @@ definitions:
     - lastName
     - password
     type: object
+  models.Frequency:
+    enum:
+    - once
+    - daily
+    - weekly
+    - monthly
+    - yearly
+    type: string
+    x-enum-varnames:
+    - Once
+    - Daily
+    - Weekly
+    - Monthly
+    - Yearly
+  models.Goal:
+    properties:
+      categoryId:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      description:
+        type: string
+      dueDate:
+        type: string
+      frequency:
+        $ref: '#/definitions/models.Frequency'
+      frequencyInterval:
+        type: integer
+      goalType:
+        $ref: '#/definitions/models.GoalType'
+      id:
+        type: string
+      parentGoalId:
+        type: string
+      startingValue:
+        type: number
+      targetValue:
+        type: number
+      title:
+        type: string
+      unit:
+        type: string
+      updatedAt:
+        type: string
+      userId:
+        type: string
+    required:
+    - frequency
+    - goalType
+    - id
+    - title
+    - userId
+    type: object
+  models.GoalCategory:
+    properties:
+      color:
+        type: string
+      icon:
+        type: string
+      id:
+        type: string
+      maxGoals:
+        type: integer
+      title:
+        type: string
+      userId:
+        type: string
+    required:
+    - color
+    - icon
+    - id
+    - title
+    - userId
+    type: object
+  models.GoalEntry:
+    properties:
+      createdAt:
+        type: string
+      date:
+        type: string
+      goalId:
+        type: string
+      id:
+        type: string
+      note:
+        type: string
+      value:
+        type: number
+    required:
+    - createdAt
+    - date
+    - goalId
+    - id
+    - value
+    type: object
+  models.GoalType:
+    enum:
+    - habit
+    - numeric
+    type: string
+    x-enum-varnames:
+    - Habit
+    - Numeric
   models.LoginUser:
     properties:
       email:
@@ -27,6 +188,62 @@ definitions:
     required:
     - email
     - password
+    type: object
+  models.UpdateGoal:
+    properties:
+      categoryId:
+        type: string
+      description:
+        type: string
+      dueDate:
+        type: string
+      frequency:
+        $ref: '#/definitions/models.Frequency'
+      frequencyInterval:
+        type: integer
+      goalType:
+        $ref: '#/definitions/models.GoalType'
+      parentGoalId:
+        type: string
+      startingValue:
+        type: number
+      targetValue:
+        type: number
+      title:
+        type: string
+      unit:
+        type: string
+    required:
+    - frequency
+    - goalType
+    - title
+    type: object
+  models.UpdateGoalCategory:
+    properties:
+      color:
+        type: string
+      icon:
+        type: string
+      maxGoals:
+        type: integer
+      title:
+        type: string
+    required:
+    - color
+    - icon
+    - title
+    type: object
+  models.UpdateGoalEntry:
+    properties:
+      date:
+        type: string
+      note:
+        type: string
+      value:
+        type: number
+    required:
+    - date
+    - value
     type: object
   models.UserResponse:
     properties:
@@ -60,6 +277,497 @@ info:
   title: Kaizen API
   version: "1.0"
 paths:
+  /goalCategories:
+    post:
+      consumes:
+      - application/json
+      description: creates a new goal category (like Physical) for the user
+      operationId: create-goal-category
+      parameters:
+      - description: Goal category creation data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateGoalCategory'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.GoalCategory'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create a new goal category
+  /goalCategories/{goal_category_id}:
+    delete:
+      description: Deletes goal category.
+      operationId: delete-goal-category-by-id
+      parameters:
+      - description: Goal ID
+        in: path
+        name: goal_category_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Deletes goal category
+    get:
+      description: Retrieves goal categories by the authenticated user
+      operationId: get-goal-categories-by-user
+      parameters:
+      - description: Goal category id
+        in: path
+        name: goal_category_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.GoalCategory'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Retrieve goals categories by owner
+    put:
+      consumes:
+      - application/json
+      description: Updates goal category. Send ALL fields each time
+      operationId: update-goal-category-by-id
+      parameters:
+      - description: Goal ID
+        in: path
+        name: goal_category_id
+        required: true
+        type: string
+      - description: Updated goal category data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateGoalCategory'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Updates goal category
+  /goalCategories/me:
+    get:
+      description: Retrieves goal categories by the authenticated user
+      operationId: get-goal-categories-by-user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.GoalCategory'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Retrieve goals categories by owner
+  /goals:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new goal for the user
+      operationId: create-goal
+      parameters:
+      - description: Goal creation data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateGoal'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Goal'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create a new goal
+  /goals/{goal_id}:
+    delete:
+      description: Deletes a goal by id
+      operationId: delete-goal-by-id
+      parameters:
+      - description: Goal ID
+        in: path
+        name: goal_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Deletes a goal
+    get:
+      description: Retrieves a goal by its id
+      operationId: get-goal-by-id
+      parameters:
+      - description: Goal ID
+        in: path
+        name: goal_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Goal'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Retrieve a goal by its id
+    put:
+      consumes:
+      - application/json
+      description: Updates goals. Send ALL fields each time
+      operationId: update-goal-by-id
+      parameters:
+      - description: Goal ID
+        in: path
+        name: goal_id
+        required: true
+        type: string
+      - description: Updated goal data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateGoal'
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Updates goal
+  /goals/{goal_id}/goalEntries:
+    get:
+      description: Gets goal entries based on either its id, start/end date, etc.
+      operationId: get-goal-entries
+      parameters:
+      - description: Goal ID
+        in: path
+        name: goal_id
+        required: true
+        type: string
+      - description: Limit number of results
+        in: query
+        name: limit
+        type: integer
+      - description: Offset for pagination
+        in: query
+        name: offset
+        type: integer
+      - description: Optional filter for start date
+        in: query
+        name: startDate
+        type: string
+      - description: Optional filter for end date
+        in: query
+        name: endDate
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.GoalEntry'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get goal entries
+    post:
+      consumes:
+      - application/json
+      description: Creates a new goal entry for a goal
+      operationId: create-goal-entry
+      parameters:
+      - description: Goal ID
+        in: path
+        name: goal_id
+        required: true
+        type: string
+      - description: Goal entry creation data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateGoalEntry'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.GoalEntry'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create goal entry
+  /goals/{goal_id}/goalEntries/{goal_entry_id}:
+    delete:
+      description: Deletes a goal entry by id
+      operationId: delete-goal-entry-by-id
+      parameters:
+      - description: Goal ID
+        in: path
+        name: goal_id
+        required: true
+        type: string
+      - description: Goal entry ID
+        in: path
+        name: goal_entry_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Deletes a goal entry
+    put:
+      consumes:
+      - application/json
+      description: Updates a goal entry. Send all fields each time
+      operationId: update-goal-entry-by-id
+      parameters:
+      - description: Goal ID
+        in: path
+        name: goal_id
+        required: true
+        type: string
+      - description: Goal entry ID
+        in: path
+        name: goal_entry_id
+        required: true
+        type: string
+      - description: Updated goal entry data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateGoalEntry'
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update goal entry
+  /goals/categories/{category_id}:
+    get:
+      description: Retrieves goals by the category id
+      operationId: get-goals-by-category
+      parameters:
+      - description: 'Category id '
+        in: path
+        name: category_id
+        required: true
+        type: string
+      - description: Limit number of results
+        in: query
+        name: limit
+        type: integer
+      - description: Offset for pagination
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Goal'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Retrieve goals by category id
+  /goals/me:
+    get:
+      description: Retrieves goals by the user
+      operationId: get-goals-by-user
+      parameters:
+      - description: Limit number of results
+        in: query
+        name: limit
+        type: integer
+      - description: Offset for pagination
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Goal'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Retrieve goals by owner
+  /goals/parentGoals/{parent_goal_id}:
+    delete:
+      description: Deletes all goals with the specified parent id
+      operationId: delete-goals-by-parent-id
+      parameters:
+      - description: Parent goal ID
+        in: path
+        name: parent_goal_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Deletes all goals by parent id
   /public/users:
     post:
       consumes:
