@@ -5,6 +5,7 @@ import (
 	"backend/middleware"
 	"backend/models"
 	"backend/services"
+	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -124,6 +125,50 @@ func parseOptionalDateQuery(ctx *gin.Context, key string) (*time.Time, error) {
 	return &parsed, nil
 }
 
-// Update goal entry
+// @Summary Update goal entry
+// @Description Updates a goal entry. Send all fields each time
+// @ID update-goal-entry-by-id
+// @Accept json
+// @Produce json
+// @Param goal_id path string true "Goal ID"
+// @Param goal_entry_id path string true "Goal entry ID"
+// @Param body body models.UpdateGoalEntry true "Updated goal entry data"
+// @Success 202
+// @Failure 400 {string} string
+// @Failure 404 {string} string
+// @Failture 500 {string} string
+// @Router /goals/{goal_id}/goalEntries/{goal_entry_id} [put]
+// @Security BearerAuth
+func UpdateGoalEntryController(goalEntryService *services.GoalEntryService) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var updateGoalEntry models.UpdateGoalEntry
+
+		goalEntryId, err := uuid.Parse(ctx.Param("goal_entry_id"))
+
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid goal entry id"})
+			return
+		}
+
+		if err := ctx.ShouldBindJSON(&updateGoalEntry); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		err = goalEntryService.UpdateGoalEntry(ctx, goalEntryId, updateGoalEntry)
+
+		if err != nil {
+			if errors.Is(err, services.ErrGoalNotFound) {
+				ctx.JSON(http.StatusNotFound, gin.H{"error": "goal entry not found"})
+				return
+			}
+
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.Status(http.StatusAccepted)
+	}
+}
 
 // Delete goal entry
