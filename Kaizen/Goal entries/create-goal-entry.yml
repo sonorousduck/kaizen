@@ -10,9 +10,9 @@ http:
     type: json
     data: |-
       {
-        "value": 178.4,
-        "note": "Hackathon has too much delicious food",
-        "date": "2026-07-09T12:55:33.488Z"
+        "value": 177.0,
+        "note": "The one to delete",
+        "date": "2026-07-10T12:55:33.488Z"
       }
   auth: inherit
 
