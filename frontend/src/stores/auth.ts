@@ -2,7 +2,7 @@ import type { ModelsCreateUser, ModelsUserResponse } from '@/generated/api';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { createUser, getCurrentUser, loginUser, logoutUser } from '@/generated/api';
-import { logger } from '@/utils/logger';
+import { logger, LogLevel } from '@/utils/logger';
 import { getResponseResult, isOk, isSuccess } from '@/utils/response';
 
 export const useAuthStore = defineStore('auth', () => {
@@ -18,7 +18,7 @@ export const useAuthStore = defineStore('auth', () => {
       const response = await loginUser({ email, password });
 
       if (!isSuccess<ModelsUserResponse>(response)) {
-        logger.log('error', 'error logging in', {
+        logger.log(LogLevel.Error, 'error logging in', {
           context: {
             ...getResponseResult(response),
           },
@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('auth', () => {
       return user.value;
     }
     catch (err) {
-      logger.log('error', 'login failed', {
+      logger.log(LogLevel.Error, 'login failed', {
         context: {
           err,
         },
@@ -49,7 +49,7 @@ export const useAuthStore = defineStore('auth', () => {
       const response = await createUser(modelsCreateUser);
 
       if (!isSuccess<ModelsUserResponse>(response)) {
-        logger.log('error', 'error creating an account', {
+        logger.log(LogLevel.Error, 'error creating an account', {
           context: {
             ...getResponseResult(response),
           },
@@ -62,7 +62,7 @@ export const useAuthStore = defineStore('auth', () => {
       return response.data;
     }
     catch (err) {
-      logger.log('error', 'create account failed', {
+      logger.log(LogLevel.Error, 'create account failed', {
         context: {
           err,
         },
@@ -78,7 +78,7 @@ export const useAuthStore = defineStore('auth', () => {
       const response = await logoutUser();
 
       if (!isOk(response)) {
-        logger.log('warning', 'logging out failed', {
+        logger.log(LogLevel.Warning, 'logging out failed', {
           context: {
             ...getResponseResult(response),
           },
@@ -89,7 +89,7 @@ export const useAuthStore = defineStore('auth', () => {
       return true;
     }
     catch (err) {
-      logger.log('warning', 'log out failed for an unexpected reason', {
+      logger.log(LogLevel.Warning, 'log out failed for an unexpected reason', {
         context: {
           err,
           userId: user.value?.id,
@@ -116,7 +116,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
     }
     catch (err) {
-      logger.log('error', 'Failed to check auth for an unknown reason', {
+      logger.log(LogLevel.Error, 'Failed to check auth for an unknown reason', {
         context: {
           err,
         },

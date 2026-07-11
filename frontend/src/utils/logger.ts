@@ -1,6 +1,15 @@
 import * as Sentry from '@sentry/vue';
 
-type LogLevel = 'debug' | 'info' | 'warning' | 'error' | 'fatal';
+export const LogLevel = {
+  Debug: 'debug',
+  Info: 'info',
+  Warning: 'warning',
+  Error: 'error',
+  Fatal: 'fatal',
+} as const;
+
+// eslint-disable-next-line ts/no-redeclare
+export type LogLevel = (typeof LogLevel)[keyof typeof LogLevel];
 
 interface LogOptions {
   context: Record<string, unknown>
@@ -15,7 +24,7 @@ class Logger {
 
     if (this.isDev) {
       // eslint-disable-next-line no-console
-      const logFunction = level === 'error' ? console.error : level === 'warning' ? console.warn : console.log;
+      const logFunction = level === LogLevel.Error ? console.error : level === LogLevel.Warning ? console.warn : console.log;
 
       logFunction(`[${level.toUpperCase()}] ${message}`, { ...context });
     }
