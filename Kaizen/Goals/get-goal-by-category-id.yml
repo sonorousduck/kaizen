@@ -1,0 +1,20 @@
+info:
+  name: get-goal-by-category-id
+  type: http
+  seq: 7
+
+http:
+  method: GET
+  url: "{{api}}goals/categories/{{categoryId}}"
+  auth: inherit
+
+runtime:
+  variables:
+    - name: categoryId
+      value: 71c0530a-c1f4-4cde-9a89-5f7aaba42b43
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

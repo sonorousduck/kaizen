@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{api}}goalCategories/{{goalCategory}}"
+  url: 4f58be22-0d12-4e80-b913-c0118c0b40a9{{api}}goalCategories/{{goalCategory}}
   auth: inherit
 
 runtime:

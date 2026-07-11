@@ -51,9 +51,10 @@ type CreateGoal struct {
 	TargetValue       *float32   `json:"targetValue"`
 	Unit              string     `json:"unit"`
 	FrequencyInterval int32      `json:"frequencyInterval"`
-	Frequency         *Frequency `json:"frequency" binding:"required"`
+	Frequency         Frequency  `json:"frequency" binding:"required"`
 	GoalType          GoalType   `json:"goalType" binding:"required"`
 	DueDate           *time.Time `json:"dueDate"`
+	CategoryId        *uuid.UUID `json:"categoryId"`
 }
 
 type UpdateGoal struct {
@@ -64,7 +65,8 @@ type UpdateGoal struct {
 	TargetValue       *float32   `json:"targetValue"`
 	Unit              string     `json:"unit"`
 	FrequencyInterval int32      `json:"frequencyInterval"`
-	Frequency         *Frequency `json:"frequency" binding:"required"`
+	Frequency         Frequency  `json:"frequency" binding:"required"`
 	GoalType          GoalType   `json:"goalType" binding:"required"`
 	DueDate           *time.Time `json:"dueDate"`
+	CategoryId        *uuid.UUID `json:"categoryId"`
 }

@@ -13,6 +13,9 @@ func RegisterRoutes(rg *gin.RouterGroup, goalService *services.GoalService) {
 	// Get goal for user
 	rg.GET("/goals/me", GetGoalsForUserController(goalService))
 
+	// Get goals by category id
+	rg.GET("/goals/categories/:category_id", GetGoalsForCategoryController(goalService))
+
 	// Create goal
 	rg.POST("/goals", CreateGoalController(goalService))
 
