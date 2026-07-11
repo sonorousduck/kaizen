@@ -5,8 +5,8 @@ import { useRouter } from 'vue-router';
 import DuckButton from '@/components/core/DuckButton/DuckButton.vue';
 import { getGoalsByUser } from '@/generated/api';
 import { useAuthStore } from '@/stores/auth';
-import { logger } from '@/utils/logger';
-import { isSuccess } from '@/utils/response';
+import { logger, LogLevel } from '@/utils/logger';
+import { getResponseResult, isSuccess } from '@/utils/response';
 
 const auth = useAuthStore();
 const router = useRouter();
@@ -14,9 +14,17 @@ const router = useRouter();
 const goals = computedAsync(async () => {
   const userGoals = await getGoalsByUser({});
 
-  if (!isSuccess<ReadonlyArray<ModelsGoal>>) {
-    logger.log('info');
+  if (!isSuccess<ModelsGoal[]>(userGoals)) {
+    logger.log(LogLevel.Error, 'Failed to get user goals', {
+      context: {
+        ...getResponseResult(userGoals),
+      },
+    });
+
+    return [];
   }
+
+  return userGoals.data;
 });
 
 async function logout() {
@@ -31,6 +39,12 @@ async function logout() {
 <template>
   <div>
     <div> Welcome to logged in world!</div>
+
+    <div
+      v-for="goal in goals"
+      :key="goal.id">
+      {{ goal.title }}
+    </div>
 
     <DuckButton
       @click="logout">
