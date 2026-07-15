@@ -11,6 +11,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Bottomnavbar: typeof import('./src/components/navigation/bottomnavbar.vue')['default']
     DuckButton: typeof import('./src/components/core/DuckButton/DuckButton.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElCol: typeof import('element-plus/es')['ElCol']
@@ -18,8 +19,10 @@ declare module 'vue' {
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElTag: typeof import('element-plus/es')['ElTag']
+    Navigationbutton: typeof import('./src/components/navigation/navigationbutton.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Sidebarnav: typeof import('./src/components/navigation/sidebarnav.vue')['default']
     TitleWithDescriptionText: typeof import('./src/components/core/text/TitleWithDescriptionText.vue')['default']
   }
 }
