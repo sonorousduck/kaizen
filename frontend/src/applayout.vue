@@ -36,5 +36,6 @@ const { isMobile } = storeToRefs(useResponsive());
 .app-layout-content {
   flex: 1;
   min-width: 0;
+  padding: 0 8px;
 }
 </style>
