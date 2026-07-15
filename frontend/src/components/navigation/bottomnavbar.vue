@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
 import { navigationItems } from '@/router/navigation';
+import Bottomnavigationbutton from './bottomnavigationbutton.vue';
 </script>
 
 <template>
   <nav
     class="bottom-navigation">
-    <RouterLink
+    <Bottomnavigationbutton
       v-for="item in navigationItems"
       :key="item.to"
       :to="item.to"
-      class="bottom-navigation-item"
-      active-class="bottom-navigation-item-active">
+      :navigation-item="item">
       {{ item.label }}
-    </RouterLink>
+    </Bottomnavigationbutton>
   </nav>
 </template>
 
@@ -29,20 +28,5 @@ import { navigationItems } from '@/router/navigation';
   justify-content: space-around;
   height: 56px;
   background-color: @color-background-soft;
-}
-
-.bottom-navigation-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  height: 100%;
-  color: @color-text-secondary;
-}
-
-.bottom-navigation-item-active {
-  color: @color-text-primary;
-  font-weight: @font-weight-bold;
 }
 </style>

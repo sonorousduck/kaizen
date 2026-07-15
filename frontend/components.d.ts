@@ -12,6 +12,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Bottomnavbar: typeof import('./src/components/navigation/bottomnavbar.vue')['default']
+    Bottomnavigationbutton: typeof import('./src/components/navigation/bottomnavigationbutton.vue')['default']
     DuckButton: typeof import('./src/components/core/DuckButton/DuckButton.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElCol: typeof import('element-plus/es')['ElCol']
