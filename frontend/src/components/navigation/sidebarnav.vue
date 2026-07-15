@@ -7,7 +7,8 @@ import Navigationbutton from './navigationbutton.vue';
 <template>
   <div
     class="host">
-    <DuckButton>
+    <DuckButton
+      class="goal-creation">
       + New Goal
     </DuckButton>
     <div
@@ -37,7 +38,11 @@ import Navigationbutton from './navigationbutton.vue';
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 8px;
+  padding: 8px 0;
+}
+
+.goal-creation {
+  margin: 0 4px;
 }
 
 .main-navigation-button-group {
