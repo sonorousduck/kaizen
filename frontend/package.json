@@ -16,6 +16,7 @@
     "element-plus": "^2.14.2",
     "eslint-plugin-format": "^2.0.1",
     "eslint-plugin-vue": "^10.9.2",
+    "oh-vue-icons": "1.0.0-rc3",
     "oxlint": "^1.69.0",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",

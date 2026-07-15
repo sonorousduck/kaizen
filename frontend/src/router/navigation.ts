@@ -5,11 +5,11 @@ export interface NavigationItem {
 }
 
 export const navigationItems: ReadonlyArray<NavigationItem> = [
-  { label: 'Home', to: '/home', icon: 'home' },
-  { label: 'Goals', to: '/goals', icon: 'target' },
-  { label: 'Progress', to: '/progress', icon: 'yeet' },
+  { label: 'Home', to: '/home', icon: 'la-home-solid' },
+  { label: 'Goals', to: '/goals', icon: 'gi-archery-target' },
+  { label: 'Progress', to: '/progress', icon: 'gi-progression' },
 ];
 
 export const bottomNavigationItems: ReadonlyArray<NavigationItem> = [
-  { label: 'Settings', to: '/settings', icon: 'yeet' },
+  { label: 'Settings', to: '/settings', icon: 'bi-gear' },
 ];

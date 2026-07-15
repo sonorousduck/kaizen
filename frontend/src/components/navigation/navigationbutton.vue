@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { NavigationItem } from '@/router/navigation';
 import { useRouter } from 'vue-router';
-import DuckButton from '@/components/core/DuckButton/DuckButton.vue';
 
 interface Props {
   navigationItem: NavigationItem
@@ -19,6 +18,8 @@ function onNavigationClicked() {
   <button
     class="navigation-button"
     @click="onNavigationClicked">
+    <v-icon
+      :name="props.navigationItem.icon" />
     {{ props.navigationItem.label }}
   </button>
 </template>
@@ -34,6 +35,10 @@ function onNavigationClicked() {
   font-weight: @font-weight-bold;
   padding: 12px 8px;
   background-color: @color-background-mute;
+  gap: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 
   &:hover {
     background-color: @color-background-ghost-hover;

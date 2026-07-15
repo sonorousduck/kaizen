@@ -1,10 +1,12 @@
 import * as Sentry from '@sentry/vue';
 import ElementPlus from 'element-plus';
+import { addIcons, OhVueIcon } from 'oh-vue-icons';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import { createApp } from 'vue';
 import router from '@/router';
 import App from './App.vue';
+import { vueIcons } from './inusevueicons.ts';
 import '@/styles/theme.less';
 
 const app = createApp(App);
@@ -20,6 +22,9 @@ Sentry.init({
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
+
+addIcons(...vueIcons);
+app.component('v-icon', OhVueIcon);
 
 app.use(pinia);
 app.use(router);
