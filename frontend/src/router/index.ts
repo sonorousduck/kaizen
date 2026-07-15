@@ -4,6 +4,8 @@ import Createaccount from '@/pages/createaccount.vue';
 import Goals from '@/pages/goals.vue';
 import Home from '@/pages/home.vue';
 import Login from '@/pages/login.vue';
+import Progress from '@/pages/progress.vue';
+import Settings from '@/pages/settings.vue';
 import { useAuthStore } from '@/stores/auth.ts';
 
 export const isRouterReady = ref<boolean>(false);
@@ -32,6 +34,16 @@ const router = createRouter({
       path: '/goals',
       name: 'Goals',
       component: Goals,
+    },
+    {
+      path: '/progress',
+      name: 'Progress',
+      component: Progress,
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: Settings,
     },
     {
       path: '/',
