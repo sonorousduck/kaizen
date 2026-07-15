@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import DuckButton from '@/components/core/DuckButton/DuckButton.vue';
-import { navigationItems } from '@/router/navigation';
+import { bottomNavigationItems, navigationItems } from '@/router/navigation';
 import Navigationbutton from './navigationbutton.vue';
 </script>
 
@@ -14,6 +14,14 @@ import Navigationbutton from './navigationbutton.vue';
       class="main-navigation-button-group">
       <Navigationbutton
         v-for="item in navigationItems"
+        :key="item.to"
+        :navigation-item="item" />
+    </div>
+
+    <div
+      class="bottom-section">
+      <Navigationbutton
+        v-for="item in bottomNavigationItems"
         :key="item.to"
         :navigation-item="item" />
     </div>
@@ -33,6 +41,13 @@ import Navigationbutton from './navigationbutton.vue';
 }
 
 .main-navigation-button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bottom-section {
+  margin-top: auto;
   display: flex;
   flex-direction: column;
   gap: 2px;

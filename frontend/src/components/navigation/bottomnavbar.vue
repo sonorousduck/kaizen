@@ -28,6 +28,7 @@ import { navigationItems } from '@/router/navigation';
   display: flex;
   justify-content: space-around;
   height: 56px;
+  background-color: @color-background-soft;
 }
 
 .bottom-navigation-item {
