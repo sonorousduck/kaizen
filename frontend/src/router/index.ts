@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import Createaccount from '@/pages/createaccount.vue';
+import Goals from '@/pages/goals.vue';
 import Home from '@/pages/home.vue';
 import Login from '@/pages/login.vue';
 import { useAuthStore } from '@/stores/auth.ts';
@@ -26,6 +27,11 @@ const router = createRouter({
       path: '/home',
       name: 'Home',
       component: Home,
+    },
+    {
+      path: '/goals',
+      name: 'Goals',
+      component: Goals,
     },
     {
       path: '/',

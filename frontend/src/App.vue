@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { RouterView, useRoute } from 'vue-router';
+import { RouterView } from 'vue-router';
+import Applayout from './applayout.vue';
 import { isRouterReady } from './router';
+import { useAuthStore } from './stores/auth';
 
-const route = useRoute();
+const auth = useAuthStore();
 </script>
 
 <template>
   <template
     v-if="isRouterReady">
+    <Applayout
+      v-if="auth.isLoggedIn">
+      <RouterView />
+    </Applayout>
     <main
+      v-else
       class="app-main">
       <RouterView />
     </main>
